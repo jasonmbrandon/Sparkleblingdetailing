@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle & Bling | Mobile Auto Detailing & Ceramic Coatings | Lancaster, Palmdale & Santa Clarita, CA</title>
+    <meta name="description" content="Sparkle & Bling Mobile Auto Detailing. Certified ceramic coatings, multi-stage paint correction & full interior detailing delivered to your driveway in Lancaster, Palmdale & Santa Clarita. Call (661) 481-5317!">
+    <meta name="keywords" content="mobile auto detailing lancaster ca, ceramic coating santa clarita, paint correction palmdale, mobile car wash valencia ca, sparkle and bling detailing">
+    
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:title" content="Sparkle & Bling | Mobile Auto Detailing & Ceramic Coatings">
+    <meta property="og:description" content="Showroom liquid gloss delivered to your driveway. Self-contained mobile rigs serving Lancaster, Palmdale & Santa Clarita Valley.">
+    <meta property="og:image" content="assets/hero.jpg">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#FFE066',
+                            500: '#FFD700',
+                            600: '#D4AF37',
+                            700: '#AA820A',
+                        },
+                        amberAccent: '#FFA500',
+                        skyCyan: '#87CEEB',
+                        electricCyan: '#00A8E8',
+                        onyx: {
+                            950: '#070A0F',
+                            900: '#0E131F',
+                            850: '#161D2F',
+                            800: '#1E273D',
+                            700: '#2A3552'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Montserrat', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js & FontAwesome Icons -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Glassmorphism & Styling -->
+    <style>
+        .glass-card {
+            background: rgba(22, 29, 47, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF099 0%, #FFD700 50%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .gold-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+        }
+    </style>
+
+    <!-- Structured Data (JSON-LD SEO Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AutoRepair",
+      "name": "Sparkle & Bling Mobile Auto Detailing & Ceramic Coatings",
+      "image": "assets/logo.jpg",
+      "@id": "https://www.sparkleblingdetailing.com/#business",
+      "url": "https://www.sparkleblingdetailing.com",
+      "telephone": "+1-661-481-5317",
+      "priceRange": "$$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lancaster",
+        "addressRegion": "CA",
+        "postalCode": "93536",
+        "addressCountry": "US"
+      },
+      "areaServed": [
+        "Lancaster, CA",
+        "Palmdale, CA",
+        "Quartz Hill, CA",
+        "Santa Clarita, CA",
+        "Valencia, CA",
+        "Stevenson Ranch, CA"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "184"
+      }
+    }
+    </script>
+</head>
+<body class="bg-onyx-950 text-slate-200 font-body antialiased selection:bg-gold-500 selection:text-onyx-900 pb-20 md:pb-0" x-data="sparkleApp()">
+
+    <!-- Top Regional Info Bar -->
+    <div class="bg-onyx-900 border-b border-gold-500/20 py-2 px-4 text-xs text-slate-300">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-truck-sparkles text-gold-400"></i>
+                <span>100% Self-Contained Mobile Unit — <strong>We Bring Our Own Spot-Free Water & Electricity!</strong></span>
+            </div>
+            <div class="flex items-center gap-4 text-gold-400 font-semibold">
+                <a href="tel:6614815317" class="hover:text-white transition-colors flex items-center gap-1">
+                    <i class="fa-solid fa-phone"></i> (661) 481-5317
+                </a>
+                <span class="text-slate-600">|</span>
+                <span class="text-skyCyan">Lancaster • Palmdale • Santa Clarita</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-onyx-900/90 backdrop-blur-md border-b border-gold-500/25 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <!-- Official Brand Logo -->
+            <a href="#" class="flex items-center gap-3">
+                <img src="assets/logo.jpg" alt="Sparkle & Bling Logo" class="w-12 h-12 rounded-full object-cover border-2 border-gold-500 shadow-md">
+                <div>
+                    <span class="font-heading font-extrabold text-lg sm:text-xl tracking-wide text-white block leading-none">SPARKLE <span class="gold-gradient-text">& BLING</span></span>
+                    <span class="text-[10px] tracking-widest text-skyCyan uppercase block mt-1 font-semibold">MOBILE AUTO DETAILING & CERAMIC COATING</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-4 xl:gap-7 font-medium text-xs xl:text-sm text-slate-300">
+                <a href="#services" class="hover:text-gold-400 transition-colors">Services & Packages</a>
+                <a href="#why-us" class="hover:text-gold-400 transition-colors whitespace-nowrap">Why Choose Us</a>
+                <a href="#results" class="hover:text-gold-400 transition-colors whitespace-nowrap">Before & After</a>
+                <a href="#estimator" class="hover:text-gold-400 transition-colors whitespace-nowrap">Price Estimator</a>
+                <a href="#reviews" class="hover:text-gold-400 transition-colors">Reviews</a>
+            </nav>
+
+            <!-- Call & Book CTAs -->
+            <div class="flex items-center gap-3 ml-6 xl:ml-10 shrink-0">
+                <a href="tel:6614815317" class="hidden sm:inline-flex items-center gap-2 bg-onyx-800 hover:bg-onyx-700 text-gold-400 border border-gold-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition-all">
+                    <i class="fa-solid fa-phone"></i> (661) 481-5317
+                </a>
+                <button @click="chatOpen = true" type="button" class="gold-btn text-onyx-900 font-heading font-extrabold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Book Online</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SHOWCASE CAROUSEL SECTION -->
+    <section class="relative py-20 lg:py-28 px-4 bg-onyx-950 overflow-hidden" x-init="setInterval(() => nextSlide(), 5000)">
+        <!-- Dynamic Background Carousel Slides -->
+        <div class="absolute inset-0 z-0">
+            <template x-for="(slide, idx) in heroSlides" :key="idx">
+                <div x-show="currentSlide === idx" 
+                     x-transition:enter="transition opacity duration-1000 ease-out" 
+                     x-transition:enter-start="opacity-0" 
+                     x-transition:enter-end="opacity-100" 
+                     x-transition:leave="transition opacity duration-1000 ease-in" 
+                     x-transition:leave-start="opacity-100" 
+                     x-transition:leave-end="opacity-0" 
+                     class="absolute inset-0">
+                    <img :src="slide.img" :alt="slide.title" class="w-full h-full object-cover opacity-40">
+                </div>
+            </template>
+            <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-onyx-950/90 via-transparent to-onyx-950/90"></div>
+        </div>
+
+        <!-- Carousel Slide Navigation Arrows -->
+        <button @click="prevSlide()" type="button" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-onyx-900/80 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 flex items-center justify-center transition-all hidden sm:flex">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button @click="nextSlide()" type="button" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-onyx-900/80 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 flex items-center justify-center transition-all hidden sm:flex">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center space-y-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold uppercase tracking-wider">
+                <i class="fa-solid fa-crown"></i>
+                <span x-text="heroSlides[currentSlide].tag"></span>
+            </div>
+
+            <h1 class="font-heading font-black text-4xl sm:text-6xl text-white leading-tight" x-html="heroSlides[currentSlide].heading">
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-xl leading-relaxed" x-text="heroSlides[currentSlide].subtext">
+            </p>
+
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+                <button @click="chatOpen = true" class="w-full sm:w-auto gold-btn text-onyx-900 font-heading font-extrabold text-base px-8 py-4 rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>Get Instant Quote & Book</span>
+                </button>
+                <a href="tel:6614815317" class="w-full sm:w-auto bg-onyx-800 hover:bg-onyx-700 text-white border border-gold-500/40 font-heading font-bold text-base px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-phone text-gold-400"></i>
+                    <span>Call (661) 481-5317</span>
+                </a>
+            </div>
+
+            <!-- Carousel Slide Indicators -->
+            <div class="pt-4 flex items-center justify-center gap-2">
+                <template x-for="(slide, idx) in heroSlides" :key="idx">
+                    <button @click="currentSlide = idx" type="button" 
+                            :class="currentSlide === idx ? 'w-8 bg-gold-500' : 'w-2.5 bg-slate-600 hover:bg-slate-400'" 
+                            class="h-2.5 rounded-full transition-all duration-300"></button>
+                </template>
+            </div>
+
+            <!-- Key Trust Badges -->
+            <div class="pt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-faucet-drip"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm">Self-Contained</div>
+                        <div class="text-xs text-slate-400">Spot-Free Water & Power</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm">CARFAX Logged</div>
+                        <div class="text-xs text-slate-400">Registered Warranties</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm">4.9 Star Rating</div>
+                        <div class="text-xs text-slate-400">180+ Local Reviews</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm">$1M Insured</div>
+                        <div class="text-xs text-slate-400">Licensed Professional</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE SPARKLE & BLING -->
+    <section id="why-us" class="py-16 px-4 bg-onyx-900 border-y border-gold-500/20">
+        <div class="max-w-6xl mx-auto space-y-12 text-center">
+            <div class="space-y-3">
+                <span class="text-skyCyan font-semibold uppercase tracking-widest text-xs">THE SPARKLE & BLING DIFFERENCE</span>
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">WHY VEHICLE OWNERS TRUST US</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 text-left">
+                <div class="glass-card p-6 rounded-2xl space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/20 text-gold-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-van-shuttle"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-white">We Come To You Anywhere</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Whether at your home in Lancaster, office in Palmdale, or estate in Santa Clarita & Valencia, our mobile rigs arrive fully equipped with clean deionized water and power generators.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/20 text-gold-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-white">Certified Ceramic Coatings</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">We apply multi-year 9H ceramic and graphene coatings that protect your clear coat against desert sun oxidation, bird drop etching, and scratch swirls, backed by official CARFAX VIN logging.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/20 text-gold-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-pump-soap"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-white">Deep Interior Extraction</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Steam sanitation and hot water extraction for seats, carpets, and headliners to remove deep stains, odors, pet hair, and bacteria, leaving your cabin smelling fresh.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES & TRANSPARENT PACKAGES -->
+    <section id="services" class="py-20 px-4 bg-onyx-950">
+        <div class="max-w-6xl mx-auto space-y-12">
+            <div class="text-center space-y-3">
+                <span class="text-gold-400 font-semibold uppercase tracking-widest text-xs">SERVICES & PRICING</span>
+                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">TRANSPARENT DETAILING PACKAGES</h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">No hidden fees. All prices benchmarked against Southern California standards for high-quality detailing craftsmanship.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Package 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="text-xs font-bold text-skyCyan uppercase">Express Maintenance</div>
+                        <h3 class="font-heading font-bold text-xl text-white">Hand Wash & Refresh</h3>
+                        <div class="font-heading font-black text-3xl gold-gradient-text">$135 <span class="text-xs text-slate-400 font-normal">/ Sedan</span></div>
+                        <p class="text-xs text-slate-300">Perfect for regular maintenance wash & quick interior cleanup.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-700/60 pt-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Deionized spot-free hand wash</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Wheels, tires & wheel wells cleaned</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Vacuum seats, carpets & mats</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Wipe down dash, console & door jam</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Spray gloss wax protection</li>
+                        </ul>
+                    </div>
+                    <button @click="chatOpen = true" class="w-full bg-onyx-800 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 text-xs font-bold py-3 rounded-xl transition-all">Book Express Wash</button>
+                </div>
+
+                <!-- Package 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-gold-500 bg-onyx-900/90 relative">
+                    <div class="absolute -top-3 right-4 bg-gold-500 text-onyx-900 text-[10px] font-bold px-3 py-0.5 rounded-full uppercase">Most Popular</div>
+                    <div class="space-y-3">
+                        <div class="text-xs font-bold text-gold-400 uppercase">Signature Deep Detail</div>
+                        <h3 class="font-heading font-bold text-xl text-white">Full Interior & Exterior</h3>
+                        <div class="font-heading font-black text-3xl gold-gradient-text">$265 <span class="text-xs text-slate-400 font-normal">/ Sedan</span></div>
+                        <p class="text-xs text-slate-300">Deep steam sanitation & paint clay bar decon restoration.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-700/60 pt-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Everything in Express Detail</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Paint clay bar decontamination</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Steam vent & carpet shampoo extraction</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Leather conditioning & trim dressing</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> 6-Month Silica Paint Sealant</li>
+                        </ul>
+                    </div>
+                    <button @click="chatOpen = true" class="w-full gold-btn text-onyx-900 font-bold text-xs py-3 rounded-xl">Book Signature Detail</button>
+                </div>
+
+                <!-- Package 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="text-xs font-bold text-skyCyan uppercase">3-Year Protection</div>
+                        <h3 class="font-heading font-bold text-xl text-white">3-Year Ceramic Shield</h3>
+                        <div class="font-heading font-black text-3xl text-skyCyan">$1,050 <span class="text-xs text-slate-400 font-normal">/ Sedan</span></div>
+                        <p class="text-xs text-slate-300">2-Stage paint correction cut & certified ceramic coating.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-700/60 pt-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-skyCyan"></i> 2-Stage machine paint correction cut</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-skyCyan"></i> 85%+ Scratch & swirl removal</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-skyCyan"></i> 3-Year 9H Nano Ceramic Coating</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-skyCyan"></i> Hydrophobic glass treatment</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400 font-bold"></i> <strong>CARFAX VIN Registration</strong></li>
+                        </ul>
+                    </div>
+                    <button @click="chatOpen = true" class="w-full bg-onyx-800 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 text-xs font-bold py-3 rounded-xl transition-all">Book 3-Yr Ceramic</button>
+                </div>
+
+                <!-- Package 4 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="text-xs font-bold text-gold-400 uppercase">5-Year / Lifetime</div>
+                        <h3 class="font-heading font-bold text-xl text-white">5-Yr / Lifetime Graphene</h3>
+                        <div class="font-heading font-black text-3xl gold-gradient-text">$1,575 <span class="text-xs text-slate-400 font-normal">/ Sedan</span></div>
+                        <p class="text-xs text-slate-300">Multi-stage precision polish & self-healing graphene armor.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-700/60 pt-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Multi-stage precision paint correction</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> 95%+ Swirl & etching removal</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> 5-Year or Lifetime Graphene Armor</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Wheel barrel & glass coating</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400 font-bold"></i> <strong>CARFAX Warranty Logged</strong></li>
+                        </ul>
+                    </div>
+                    <button @click="chatOpen = true" class="w-full bg-onyx-800 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 text-xs font-bold py-3 rounded-xl transition-all">Book Graphene Armor</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEFORE & AFTER PAINT CORRECTION SLIDER -->
+    <section id="results" class="py-16 px-4 bg-onyx-900 border-y border-gold-500/20">
+        <div class="max-w-5xl mx-auto space-y-10 text-center">
+            <div class="space-y-3">
+                <span class="text-skyCyan font-semibold uppercase tracking-widest text-xs">REAL RESULTS</span>
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">PAINT CORRECTION BEFORE & AFTER</h2>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto">Inspect how our machine polishing removes heavy scratches, swirl marks, and sun oxidation to reveal deep liquid reflection.</p>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl relative overflow-hidden h-[360px] sm:h-[450px]"
+                 x-data="{ sliderPos: 50 }"
+                 @mousemove="sliderPos = Math.max(0, Math.min(100, (($event.clientX - $el.getBoundingClientRect().left) / $el.getBoundingClientRect().width) * 100))">
+                <img src="assets/before_after.jpg" alt="Paint correction before and after" class="w-full h-full object-cover">
+                <div class="absolute top-4 left-4 bg-red-600/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Swirled Paint</div>
+                <div class="absolute top-4 right-4 bg-green-600/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Ceramic Mirror Gloss</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRAPED ORIGINAL SITE PROJECT GALLERY -->
+    <section id="gallery" class="py-20 px-4 bg-onyx-950 border-b border-gold-500/20">
+        <div class="max-w-6xl mx-auto space-y-10 text-center">
+            <div class="space-y-3">
+                <span class="text-gold-400 font-semibold uppercase tracking-widest text-xs">AUTHENTIC PORTFOLIO</span>
+                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">AUTHENTIC SPARKLE & BLING PROJECT SHOWCASE</h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">Scraped directly from our official portfolio: ceramic coatings, muscle car paint corrections, and deep interior extractions in Lancaster & Santa Clarita.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+                <!-- Gallery Card 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_45.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-gold-500 text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Ceramic Mirror Gloss</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">Full Ceramic Coating & Gloss Finish</div>
+                        <div class="text-xs text-slate-400">Multi-stage machine cut & 9H ceramic shield application in Lancaster, CA.</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_46.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-skyCyan text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Mobile Rig Detailing</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">Driveway Concierge Detailing</div>
+                        <div class="text-xs text-slate-400">100% self-contained deionized wash & steam extraction in Santa Clarita, CA.</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_50.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-amberAccent text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Paint Correction</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">Swirl & Defect Removal</div>
+                        <div class="text-xs text-slate-400">Level 2 precision compounding restoring clarity to luxury SUV paint in Valencia, CA.</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 4 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_47.jpeg" alt="Sparkle & Bling Interior Detail Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Interior Steam Detail</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">212°F Steam & Carpet Extraction</div>
+                        <div class="text-xs text-slate-400">Deep steam sanitation & stain extraction on leather and fabric seating in Palmdale, CA.</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 5 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_48.jpeg" alt="Sparkle & Bling Engine Bay Detail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-purple-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Engine Bay Detail</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">Engine Bay Degreasing & Dressing</div>
+                        <div class="text-xs text-slate-400">Precision degreasing and non-greasy satin sealant dressing in Quartz Hill, CA.</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 6 -->
+                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="assets/scraped_photo_53.jpeg" alt="Sparkle & Bling Ceramic Graphene Protection" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-gold-500 text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">👑 Lifetime Graphene</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-base">Flagship Lifetime Crown Graphene Armor</div>
+                        <div class="text-xs text-slate-400">3-Stage correction, self-healing Graphene matrix & CARFAX VIN registration in Valencia Estates.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IN-DEPTH INTERACTIVE ESTIMATOR -->
+    <section id="estimator" class="py-20 px-4 bg-onyx-950">
+        <div class="max-w-5xl mx-auto space-y-10">
+            <div class="text-center space-y-3">
+                <span class="text-gold-400 font-semibold uppercase tracking-widest text-xs">IN-DEPTH RATE CALCULATOR</span>
+                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">CUSTOMIZE YOUR DETAILING ESTIMATE</h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">Select your vehicle size, preferred service package, and optional add-on upgrades to calculate an exact quote.</p>
+            </div>
+
+            <div class="glass-card p-6 sm:p-10 rounded-3xl space-y-8 border-gold-500/30">
+                <!-- STEP 1: VEHICLE SIZE -->
+                <div class="space-y-3">
+                    <label class="block text-white font-heading font-bold text-base sm:text-lg flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-gold-500 text-onyx-900 text-xs font-black flex items-center justify-center">1</span>
+                        <span>SELECT VEHICLE SIZE</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button type="button" @click="vType = 'sedan'" :class="vType === 'sedan' ? 'border-gold-500 bg-gold-500/10 text-white' : 'border-onyx-700 bg-onyx-900/60 text-slate-400'" class="p-4 rounded-2xl border-2 text-center transition-all flex flex-col items-center gap-2">
+                            <i class="fa-solid fa-car text-2xl text-gold-400"></i>
+                            <div>
+                                <div class="font-bold text-sm">Sedan / Coupe</div>
+                                <div class="text-[11px] text-slate-400">Standard 2 or 4 Door</div>
+                            </div>
+                        </button>
+                        <button type="button" @click="vType = 'mid_suv'" :class="vType === 'mid_suv' ? 'border-gold-500 bg-gold-500/10 text-white' : 'border-onyx-700 bg-onyx-900/60 text-slate-400'" class="p-4 rounded-2xl border-2 text-center transition-all flex flex-col items-center gap-2">
+                            <i class="fa-solid fa-car-side text-2xl text-gold-400"></i>
+                            <div>
+                                <div class="font-bold text-sm">Mid SUV / Truck</div>
+                                <div class="text-[11px] text-slate-400">2-Row SUV / Pickup</div>
+                            </div>
+                        </button>
+                        <button type="button" @click="vType = 'full_suv'" :class="vType === 'full_suv' ? 'border-gold-500 bg-gold-500/10 text-white' : 'border-onyx-700 bg-onyx-900/60 text-slate-400'" class="p-4 rounded-2xl border-2 text-center transition-all flex flex-col items-center gap-2">
+                            <i class="fa-solid fa-truck-monster text-2xl text-gold-400"></i>
+                            <div>
+                                <div class="font-bold text-sm">Full SUV / Van</div>
+                                <div class="text-[11px] text-slate-400">3-Row SUV / Minivan</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: MAIN SERVICE PACKAGE -->
+                <div class="space-y-3 pt-4 border-t border-slate-700/60">
+                    <label class="block text-white font-heading font-bold text-base sm:text-lg flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-gold-500 text-onyx-900 text-xs font-black flex items-center justify-center">2</span>
+                        <span>CHOOSE DETAILING / CERAMIC PACKAGE</span>
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div @click="selectedPkg = 'express'" :class="selectedPkg === 'express' ? 'border-gold-500 bg-gold-500/10' : 'border-onyx-700 bg-onyx-900/60'" class="p-4 rounded-xl border-2 cursor-pointer transition-all space-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white text-sm">Express Wash & Wax</div>
+                                <div class="font-bold text-gold-400 text-sm" x-text="'$' + getPkgBase('express')"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-400">Hand wash, vacuum, tire shine, spray wax</div>
+                        </div>
+
+                        <div @click="selectedPkg = 'signature'" :class="selectedPkg === 'signature' ? 'border-gold-500 bg-gold-500/10' : 'border-onyx-700 bg-onyx-900/60'" class="p-4 rounded-xl border-2 cursor-pointer transition-all space-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white text-sm">Signature Full Detail</div>
+                                <div class="font-bold text-gold-400 text-sm" x-text="'$' + getPkgBase('signature')"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-400">Steam interior, clay decon, 6-mo sealant</div>
+                        </div>
+
+                        <div @click="selectedPkg = 'ceramic_3yr'" :class="selectedPkg === 'ceramic_3yr' ? 'border-gold-500 bg-gold-500/10' : 'border-onyx-700 bg-onyx-900/60'" class="p-4 rounded-xl border-2 cursor-pointer transition-all space-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white text-sm">3-Yr Ceramic Shield</div>
+                                <div class="font-bold text-skyCyan text-sm" x-text="'$' + getPkgBase('ceramic_3yr')"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-400">2-Stage correction + CARFAX VIN logged</div>
+                        </div>
+
+                        <div @click="selectedPkg = 'ceramic_5yr'" :class="selectedPkg === 'ceramic_5yr' ? 'border-gold-500 bg-gold-500/10' : 'border-onyx-700 bg-onyx-900/60'" class="p-4 rounded-xl border-2 cursor-pointer transition-all space-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white text-sm">5-Yr Graphene Armor</div>
+                                <div class="font-bold text-gold-400 text-sm" x-text="'$' + getPkgBase('ceramic_5yr')"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-400">Multi-stage polish + 5-yr graphene armor</div>
+                        </div>
+
+                        <div @click="selectedPkg = 'ceramic_lifetime'" :class="selectedPkg === 'ceramic_lifetime' ? 'border-gold-500 bg-gold-500/20' : 'border-onyx-700 bg-onyx-900/60'" class="p-4 rounded-xl border-2 cursor-pointer transition-all space-y-1 col-span-1 md:col-span-2 lg:col-span-1 bg-gradient-to-r from-gold-500/10 to-amber-500/10">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white text-sm flex items-center gap-1"><span>👑 Lifetime Crown</span></div>
+                                <div class="font-bold text-gold-400 text-sm" x-text="'$' + getPkgBase('ceramic_lifetime')"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-300">Self-healing graphene + CARFAX lifetime warranty</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: OPTIONAL ADD-ON UPGRADES -->
+                <div class="space-y-3 pt-4 border-t border-slate-700/60">
+                    <label class="block text-white font-heading font-bold text-base sm:text-lg flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-gold-500 text-onyx-900 text-xs font-black flex items-center justify-center">3</span>
+                        <span>OPTIONAL SPECIALTY ADD-ONS</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                        <label class="glass-card p-3 rounded-xl flex items-center justify-between cursor-pointer border border-slate-700 hover:border-gold-500/40">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" x-model="addons.headlight" class="accent-gold-500 w-4 h-4 rounded">
+                                <span class="text-white font-medium">Headlight Restoration</span>
+                            </div>
+                            <span class="text-gold-400 font-bold">+$95</span>
+                        </label>
+
+                        <label class="glass-card p-3 rounded-xl flex items-center justify-between cursor-pointer border border-slate-700 hover:border-gold-500/40">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" x-model="addons.engine" class="accent-gold-500 w-4 h-4 rounded">
+                                <span class="text-white font-medium">Engine Bay Detail</span>
+                            </div>
+                            <span class="text-gold-400 font-bold">+$125</span>
+                        </label>
+
+                        <label class="glass-card p-3 rounded-xl flex items-center justify-between cursor-pointer border border-slate-700 hover:border-gold-500/40">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" x-model="addons.petHair" class="accent-gold-500 w-4 h-4 rounded">
+                                <span class="text-white font-medium">Pet Hair Extraction</span>
+                            </div>
+                            <span class="text-gold-400 font-bold">+$85</span>
+                        </label>
+
+                        <label class="glass-card p-3 rounded-xl flex items-center justify-between cursor-pointer border border-slate-700 hover:border-gold-500/40">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" x-model="addons.glass" class="accent-gold-500 w-4 h-4 rounded">
+                                <span class="text-white font-medium">Windshield Ceramic Shield</span>
+                            </div>
+                            <span class="text-gold-400 font-bold">+$75</span>
+                        </label>
+
+                        <label class="glass-card p-3 rounded-xl flex items-center justify-between cursor-pointer border border-slate-700 hover:border-gold-500/40">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" x-model="addons.wheelCoating" class="accent-gold-500 w-4 h-4 rounded">
+                                <span class="text-white font-medium">Wheel Barrel Ceramic Barrier</span>
+                            </div>
+                            <span class="text-gold-400 font-bold">+$150</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- STEP 4: LIVE DYNAMIC SUMMARY & BOOKING HANDOFF -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gold-500/30">
+                    <div>
+                        <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">TOTAL ESTIMATED INVESTMENT</div>
+                        <div class="font-heading font-black text-4xl sm:text-5xl gold-gradient-text" x-text="'$' + calcRate()"></div>
+                        <div class="text-xs text-slate-400 mt-1">Includes 100% self-contained mobile delivery (water & power provided)</div>
+                    </div>
+                    <button @click="bookWithEstimate()" type="button" class="w-full sm:w-auto gold-btn text-onyx-900 font-heading font-extrabold text-sm px-8 py-4 rounded-xl flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>Book Appointment With Estimate</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VERIFIED GOOGLE & BBB REVIEWS SECTION -->
+    <section id="reviews" class="py-20 px-4 bg-onyx-900 border-t border-gold-500/20">
+        <div class="max-w-6xl mx-auto space-y-12 text-center">
+            <div class="space-y-4">
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-brands fa-google text-blue-400"></i>
+                    <span>VERIFIED GOOGLE 5-STAR REVIEWS & BBB ACCREDITED A+ RATING</span>
+                </div>
+                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">WHAT LOCAL VEHICLE OWNERS SAY</h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Real customer reviews from Lancaster, Palmdale, Quartz Hill, Santa Clarita & Valencia.</p>
+            </div>
+
+            <!-- Trust Badge Summary Bar -->
+            <div class="glass-card p-6 rounded-2xl max-w-4xl mx-auto space-y-6 border-gold-500/30">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                    <div class="space-y-1">
+                        <div class="flex justify-center text-gold-400 text-lg">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="font-heading font-bold text-white text-base">5.0 Star Google Rating</div>
+                        <div class="text-xs text-slate-400">100% Verified Customer Reviews</div>
+                    </div>
+
+                    <div class="space-y-1 border-y sm:border-y-0 sm:border-x border-slate-700/60 py-3 sm:py-0">
+                        <div class="font-heading font-black text-2xl text-skyCyan">BBB A+ ACCREDITED</div>
+                        <div class="font-heading font-bold text-white text-sm">Better Business Bureau</div>
+                        <div class="text-xs text-slate-400">Licensed & Insured Business</div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="font-heading font-black text-2xl text-gold-400">TOP 3 DETAILER</div>
+                        <div class="font-heading font-bold text-white text-sm">ThreeBestRated® Excellence</div>
+                        <div class="text-xs text-slate-400">Premier Mobile Detailer Lancaster</div>
+                    </div>
+                </div>
+
+                <!-- Direct Verification & Review Action Buttons -->
+                <div class="pt-4 border-t border-slate-700/60 flex flex-wrap items-center justify-center gap-3 text-xs font-bold">
+                    <a href="https://www.google.com/search?q=Sparkle+%26+Bling+Mobile+Auto+Detail+Lancaster+CA+reviews" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-onyx-800 hover:bg-skyCyan hover:text-onyx-900 text-skyCyan border border-skyCyan/40 transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-google"></i>
+                        <span>Read Google Reviews</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    <a href="https://www.bbb.org/us/ca/lancaster/profile/auto-detailing/sparkle-bling-mobile-auto-detail-1216-1288280" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-onyx-800 hover:bg-gold-500 hover:text-onyx-900 text-gold-400 border border-gold-500/40 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Verify BBB A+ Profile</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    <a href="https://search.google.com/local/writereview?placeid=ChIJ05000000000000000000000" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl gold-btn text-onyx-900 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Leave a Google Review</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Reviews Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+                <!-- Review 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"By far the best experience I've ever had dealing with a detail. Joseph was confident when multiple other car detail companies were unable to remove the hard water deposits on my vehicle, even using acid... Joseph left my neighbors in awe!"</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Customer</div>
+                            <div class="text-[11px] text-slate-400">Lancaster, CA</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"The guys at Sparkle & Bling took care of my car. Got the 3 year ceramic coating and full detail. Worth every penny for the quality work these guys do."</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Customer</div>
+                            <div class="text-[11px] text-slate-400">Palmdale, CA</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"My car was a MESS after driving from Florida to Washington to California and it looks like it just rolled out of the lot after Sparkle & Bling came!"</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Customer</div>
+                            <div class="text-[11px] text-slate-400">Santa Clarita, CA</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"Not only will I be using Sparkle & Bling again but I am referring all of my clients to these guys from here on out. Thank you Joseph, you are a true professional at what you do!"</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Client</div>
+                            <div class="text-[11px] text-slate-400">Valencia, CA</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"Joseph brought out his mobile setup right to my driveway in Quartz Hill. Did a full interior steam extraction and pet hair removal on my SUV. Interior looks and smells brand new!"</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Customer</div>
+                            <div class="text-[11px] text-slate-400">Quartz Hill, CA</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between border-slate-700 hover:border-gold-500/40 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex text-gold-400 text-xs"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <span class="text-[10px] font-bold text-skyCyan bg-skyCyan/10 px-2 py-0.5 rounded border border-skyCyan/30">Google Review</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-normal">"He arrived right on time with his own water tank and power generator. The ceramic coating finish on my car is so slick water beads right off. Best mobile detail service in AV!"</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Verified Customer</div>
+                            <div class="text-[11px] text-slate-400">Palmdale / Lancaster</div>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded">Verified 5.0 ★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 px-4 bg-onyx-950 border-t border-gold-500/20 text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-gold-500">
+                    <span class="font-heading font-black text-white text-base">SPARKLE & BLING</span>
+                </div>
+                <p class="text-slate-400 leading-relaxed">Premium mobile auto detailing, paint correction, and certified ceramic coatings delivered directly to your driveway.</p>
+            </div>
+
+            <div>
+                <div class="font-bold text-white text-sm mb-3">Service Areas</div>
+                <ul class="space-y-1">
+                    <li>Lancaster, CA</li>
+                    <li>Palmdale, CA</li>
+                    <li>Quartz Hill, CA</li>
+                    <li>Santa Clarita, CA</li>
+                    <li>Valencia & Stevenson Ranch</li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="font-bold text-white text-sm mb-3">Services</div>
+                <ul class="space-y-1">
+                    <li>Express Hand Wash & Wax</li>
+                    <li>Full Interior Steam Detail</li>
+                    <li>Paint Correction & Scratch Removal</li>
+                    <li>3-Year & 5-Year Ceramic Coatings</li>
+                    <li>👑 Lifetime Graphene Armor</li>
+                </ul>
+            </div>
+
+            <div class="space-y-2">
+                <div class="font-bold text-white text-sm">Contact Us</div>
+                <div>Phone: <a href="tel:6614815317" class="text-gold-400 font-bold hover:underline">(661) 481-5317</a></div>
+                <div>Web: <a href="https://www.sparkleblingdetailing.com" class="text-skyCyan hover:underline">www.sparkleblingdetailing.com</a></div>
+                <div class="text-[10px] text-slate-500 pt-2">© 2026 Sparkle & Bling Mobile Auto Detailing. All Rights Reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI BOOKING CHAT CONCIERGE -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button @click="chatOpen = !chatOpen" type="button" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center text-onyx-900 text-xl shadow-2xl relative overflow-hidden">
+            <img src="assets/logo.jpg" alt="Logo" class="w-full h-full object-cover" x-show="!chatOpen">
+            <i class="fa-solid fa-xmark text-lg text-onyx-900 font-black" x-show="chatOpen"></i>
+        </button>
+
+        <div x-show="chatOpen" @click.away="chatOpen = false" x-cloak 
+             class="absolute bottom-16 right-0 w-[92vw] sm:w-[400px] h-[550px] glass-card rounded-3xl border-2 border-gold-500 shadow-2xl flex flex-col overflow-hidden">
+            
+            <div class="bg-onyx-900 p-4 border-b border-gold-500/30 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="assets/logo.jpg" alt="Sparkle AI Logo" class="w-9 h-9 rounded-full object-cover border border-gold-400">
+                    <div>
+                        <div class="font-heading font-bold text-white text-sm">Sparkle AI Concierge</div>
+                        <div class="text-[10px] text-skyCyan flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                            Online & Ready to Book
+                        </div>
+                    </div>
+                </div>
+                <button @click="chatOpen = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="chatLog">
+                <div class="flex gap-2">
+                    <img src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0">
+                    <div class="bg-onyx-800 text-slate-200 p-3 rounded-xl border border-gold-500/20 space-y-1">
+                        <p class="font-bold text-gold-400">Hi! Welcome to Sparkle & Bling 👋</p>
+                        <p>How can I help you today? Ask about ceramic quotes, mobile water/power availability, or book a appointment!</p>
+                    </div>
+                </div>
+
+                <template x-for="(msg, idx) in chatMessages" :key="idx">
+                    <div class="flex gap-2" :class="msg.role === 'user' ? 'justify-end' : ''">
+                        <img x-show="msg.role === 'ai'" src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0">
+                        <div :class="msg.role === 'user' ? 'gold-btn text-onyx-900 font-medium' : 'bg-onyx-800 text-slate-200 border border-gold-500/20'"
+                             class="p-3 rounded-xl max-w-[85%]">
+                            <p x-text="msg.text"></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="p-2 border-t border-gold-500/20 bg-onyx-900/80 flex flex-wrap gap-1">
+                <button @click="sendQuickMsg('Quote 3-Year Ceramic Coating')" type="button" class="bg-onyx-800 hover:bg-gold-500/20 text-gold-400 text-[10px] px-2.5 py-1 rounded-full border border-gold-500/30">✨ 3-Yr Ceramic Quote</button>
+                <button @click="sendQuickMsg('Do you bring water & power?')" type="button" class="bg-onyx-800 hover:bg-gold-500/20 text-gold-400 text-[10px] px-2.5 py-1 rounded-full border border-gold-500/30">💧 Water/Power Info</button>
+                <button @click="sendQuickMsg('I want to book an appointment')" type="button" class="bg-onyx-800 hover:bg-gold-500/20 text-gold-400 text-[10px] px-2.5 py-1 rounded-full border border-gold-500/30">📅 Book Service</button>
+            </div>
+
+            <form @submit.prevent="submitMsg()" class="p-3 bg-onyx-900 border-t border-gold-500/30 flex gap-2">
+                <input type="text" x-model="userInput" placeholder="Ask question or book..." class="flex-1 bg-onyx-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:border-gold-500 focus:outline-none">
+                <button type="submit" class="gold-btn text-onyx-900 px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alpine State Logic -->
+    <script>
+        function sparkleApp() {
+            return {
+                currentSlide: 0,
+                heroSlides: [
+                    {
+                        img: 'assets/slide1.jpg',
+                        tag: 'THE CERAMIC COATING KING | LANCASTER & SANTA CLARITA',
+                        heading: 'SHOWROOM LIQUID GLOSS.<br><span class="gold-gradient-text">👑 CERTIFIED LIFETIME GRAPHENE</span>',
+                        subtext: 'Dual-layer self-healing graphene matrix technology that resists desert scratch swirls, UV oxidation, and bird lime etching while automatically healing micro-scratches under sun heat.'
+                    },
+                    {
+                        img: 'assets/slide2.jpg',
+                        tag: '100% SELF-CONTAINED MOBILE DETAILING RIGS',
+                        heading: 'WE BRING SPOT-FREE WATER &<br><span class="gold-gradient-text">POWER TO YOUR DRIVEWAY</span>',
+                        subtext: 'No water or electric hookup needed! We carry onboard 100+ gallon deionized spot-free water tanks and quiet power generators directly to your home, office, or apartment driveway.'
+                    },
+                    {
+                        img: 'assets/slide3.jpg',
+                        tag: 'EXTREME HYDROPHOBIC WATER BEADING & PROTECTION',
+                        heading: 'MULTI-STAGE PAINT CORRECTION &<br><span class="gold-gradient-text">CARFAX REGISTERED WARRANTIES</span>',
+                        subtext: 'Eliminates 95%+ of clear coat swirl marks and scratches. All 3-Year, 5-Year, and Lifetime Ceramic packages are formally logged on your vehicle permanent CARFAX history report.'
+                    }
+                ],
+                nextSlide() {
+                    this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
+                },
+                prevSlide() {
+                    this.currentSlide = (this.currentSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
+                },
+                vType: 'sedan',
+                selectedPkg: 'signature',
+                addons: {
+                    headlight: false,
+                    engine: false,
+                    petHair: false,
+                    glass: false,
+                    wheelCoating: false
+                },
+                chatOpen: false,
+                userInput: '',
+                chatMessages: [],
+                getPkgBase(pkg) {
+                    const matrix = {
+                        express: { sedan: 135, mid_suv: 165, full_suv: 185 },
+                        signature: { sedan: 265, mid_suv: 305, full_suv: 345 },
+                        ceramic_3yr: { sedan: 1050, mid_suv: 1260, full_suv: 1470 },
+                        ceramic_5yr: { sedan: 1575, mid_suv: 1785, full_suv: 1995 },
+                        ceramic_lifetime: { sedan: 2625, mid_suv: 3045, full_suv: 3465 }
+                    };
+                    return matrix[pkg][this.vType] || 0;
+                },
+                calcRate() {
+                    let total = this.getPkgBase(this.selectedPkg);
+                    if (this.addons.headlight) total += 95;
+                    if (this.addons.engine) total += 125;
+                    if (this.addons.petHair) total += 85;
+                    if (this.addons.glass) total += 75;
+                    if (this.addons.wheelCoating) total += 150;
+                    return total;
+                },
+                bookWithEstimate() {
+                    this.chatOpen = true;
+                    const pkgNames = {
+                        express: 'Express Wash & Wax',
+                        signature: 'Signature Full Detail',
+                        ceramic_3yr: '3-Year Ceramic Shield',
+                        ceramic_5yr: '5-Year Graphene Armor',
+                        ceramic_lifetime: '👑 Lifetime Crown Graphene'
+                    };
+                    const summary = `Hi! I created an estimate for my ${this.vType.replace('_', ' ').toUpperCase()} with the ${pkgNames[this.selectedPkg]} package (Total: $${this.calcRate()}). I would like to lock in a mobile driveway appointment!`;
+                    this.sendQuickMsg(summary);
+                },
+                sendQuickMsg(txt) {
+                    this.userInput = txt;
+                    this.submitMsg();
+                },
+                submitMsg() {
+                    if (!this.userInput.trim()) return;
+                    const query = this.userInput.trim();
+                    this.chatMessages.push({ role: 'user', text: query });
+                    this.userInput = '';
+
+                    setTimeout(() => {
+                        let aiReply = "Thank you! What is your vehicle Year/Make/Model, and would morning or afternoon work better for your mobile appointment in Lancaster, Palmdale, or Santa Clarita?";
+                        const lower = query.toLowerCase();
+                        
+                        if (lower.includes('dealer') || lower.includes('dealership')) {
+                            aiReply = "Dealership 'ceramic packages' are usually cheap, temporary spray sealants marked up $1,500+ applied by lot techs without paint prep. Our professional ceramic coatings involve deionized washing, clay bar decontamination, 2 to 3-stage machine paint correction, 9H SiO2/Graphene bonding, and official CARFAX VIN warranty registration!";
+                        } else if (lower.includes('correction') || lower.includes('scratch') || lower.includes('swirl')) {
+                            aiReply = "Paint correction levels factory clear coat to eliminate swirl marks and scratches. Level 1 removes 50-60% light haze; Level 2 (included with 3-Year Ceramic) removes 80-85% of swirls; Level 3 multi-stage compounding (included with Graphene & Lifetime) removes 95%+ of clear coat defects!";
+                        } else if (lower.includes('graphene') || lower.includes('lifetime') || lower.includes('crown')) {
+                            aiReply = "Graphene coatings embed reduced graphene oxide into ceramic matrixes for enhanced heat dissipation (stopping Antelope Valley sun water spot etching) and self-healing micro-scratch properties under sun heat. Our 👑 Lifetime Crown package is $2,625 for sedans and includes 3-stage correction, glass/wheels coating, and unlimited CARFAX Lifetime Warranty!";
+                        } else if (lower.includes('ceramic') || lower.includes('3-year') || lower.includes('5-year') || lower.includes('quote')) {
+                            aiReply = "Our 3-Year Ceramic Shield is $1,050 for sedans ($1,260 for SUVs) and our 5-Year Graphene Armor is $1,575 ($1,785 for SUVs). Both include machine paint correction, hydrophobic glass treatment, and official CARFAX VIN registration!";
+                        } else if (lower.includes('interior') || lower.includes('steam') || lower.includes('carpet') || lower.includes('stain')) {
+                            aiReply = "Our interior detail uses 212°F thermal steam sanitation to kill 99.9% of bacteria and dust mites in AC vents and leather seams, plus hot water carpet extraction to pull ground-in dirt, spills, and pet odors out of seat fabric and floor mats!";
+                        } else if (lower.includes('carfax') || lower.includes('resale') || lower.includes('vin')) {
+                            aiReply = "Yes! All 3-Year, 5-Year, and Lifetime Ceramic Coating warranties are formally registered on your vehicle's permanent CARFAX history report, documenting professional care and boosting trade-in value by up to $3,000!";
+                        } else if (lower.includes('water') || lower.includes('power') || lower.includes('bring') || lower.includes('generator')) {
+                            aiReply = "Yes! Our mobile rigs are 100% self-contained with onboard 100+ gallon spot-free deionized water tanks and quiet generators. We service home driveways, office lots, and apartment parking spots across Lancaster, Palmdale & Santa Clarita!";
+                        } else if (lower.includes('book') || lower.includes('appointment') || lower.includes('schedule') || lower.includes('reserve')) {
+                            aiReply = "Awesome! To lock in your mobile driveway reservation, please reply with your Full Name, Phone Number, Vehicle Model, and Service Address or call us directly at (661) 481-5317!";
+                        }
+
+                        this.chatMessages.push({ role: 'ai', text: aiReply });
+                        this.$nextTick(() => {
+                            const container = document.getElementById('chatLog');
+                            if (container) container.scrollTop = container.scrollHeight;
+                        });
+                    }, 400);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
