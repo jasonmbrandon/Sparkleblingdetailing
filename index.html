@@ -142,8 +142,10 @@
     <header class="sticky top-0 z-40 bg-onyx-900/90 backdrop-blur-md border-b border-gold-500/25 py-3">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <!-- Official Brand Logo -->
-            <a href="#" class="flex items-center gap-3">
-                <img src="assets/logo.jpg" alt="Sparkle & Bling Logo" class="w-12 h-12 rounded-full object-cover border-2 border-gold-500 shadow-md">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="relative w-12 h-12 rounded-full border-2 border-gold-500 bg-onyx-950 p-0.5 shadow-lg shadow-gold-500/20 shrink-0 group-hover:scale-105 transition-transform">
+                    <img src="assets/logo.jpg" alt="Sparkle & Bling Logo" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='assets/logo.png';">
+                </div>
                 <div>
                     <span class="font-heading font-extrabold text-lg sm:text-xl tracking-wide text-white block leading-none">SPARKLE <span class="gold-gradient-text">& BLING</span></span>
                     <span class="text-[10px] tracking-widest text-skyCyan uppercase block mt-1 font-semibold">MOBILE AUTO DETAILING & CERAMIC COATING</span>
@@ -837,7 +839,7 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
             <div class="space-y-3">
                 <div class="flex items-center gap-2">
-                    <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-gold-500">
+                    <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border-2 border-gold-500 bg-onyx-950 p-0.5 object-cover" onerror="this.onerror=null; this.src='assets/logo.png';">
                     <span class="font-heading font-black text-white text-base">SPARKLE & BLING</span>
                 </div>
                 <p class="text-slate-400 leading-relaxed">Premium mobile auto detailing, paint correction, and certified ceramic coatings delivered directly to your driveway.</p>
@@ -876,8 +878,8 @@
 
     <!-- AI BOOKING CHAT CONCIERGE -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button @click="chatOpen = !chatOpen" type="button" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center text-onyx-900 text-xl shadow-2xl relative overflow-hidden">
-            <img src="assets/logo.jpg" alt="Logo" class="w-full h-full object-cover" x-show="!chatOpen">
+        <button @click="chatOpen = !chatOpen" type="button" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center text-onyx-900 text-xl shadow-2xl relative overflow-hidden p-0.5 border-2 border-gold-400">
+            <img src="assets/logo.jpg" alt="Logo" class="w-full h-full rounded-full object-cover" x-show="!chatOpen" onerror="this.onerror=null; this.src='assets/logo.png';">
             <i class="fa-solid fa-xmark text-lg text-onyx-900 font-black" x-show="chatOpen"></i>
         </button>
 
@@ -886,7 +888,7 @@
             
             <div class="bg-onyx-900 p-4 border-b border-gold-500/30 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <img src="assets/logo.jpg" alt="Sparkle AI Logo" class="w-9 h-9 rounded-full object-cover border border-gold-400">
+                    <img src="assets/logo.jpg" alt="Sparkle AI Logo" class="w-9 h-9 rounded-full object-cover border border-gold-400 bg-onyx-950 p-0.5" onerror="this.onerror=null; this.src='assets/logo.png';">
                     <div>
                         <div class="font-heading font-bold text-white text-sm">Sparkle AI Concierge</div>
                         <div class="text-[10px] text-skyCyan flex items-center gap-1">
@@ -900,7 +902,7 @@
 
             <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="chatLog">
                 <div class="flex gap-2">
-                    <img src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0">
+                    <img src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-gold-400" onerror="this.onerror=null; this.src='assets/logo.png';">
                     <div class="bg-onyx-800 text-slate-200 p-3 rounded-xl border border-gold-500/20 space-y-1">
                         <p class="font-bold text-gold-400">Hi! Welcome to Sparkle & Bling 👋</p>
                         <p>How can I help you today? Ask about ceramic quotes, mobile water/power availability, or book a appointment!</p>
@@ -909,7 +911,7 @@
 
                 <template x-for="(msg, idx) in chatMessages" :key="idx">
                     <div class="flex gap-2" :class="msg.role === 'user' ? 'justify-end' : ''">
-                        <img x-show="msg.role === 'ai'" src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0">
+                        <img x-show="msg.role === 'ai'" src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-gold-400" onerror="this.onerror=null; this.src='assets/logo.png';">
                         <div :class="msg.role === 'user' ? 'gold-btn text-onyx-900 font-medium' : 'bg-onyx-800 text-slate-200 border border-gold-500/20'"
                              class="p-3 rounded-xl max-w-[85%]">
                             <p x-text="msg.text"></p>
