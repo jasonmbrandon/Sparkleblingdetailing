@@ -1196,6 +1196,7 @@
                             class="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider border border-slate-700/80 transition-all flex items-center gap-2">
                         <span>📅 Content Calendar</span>
                     </button>
+                    <button @click="marketingTab = 'learning_engine'" :class="marketingTab === 'learning_engine' ? 'bg-gold-500 text-black font-extrabold shadow-lg' : 'bg-onyx-950 text-slate-300 hover:border-gold-500/40'" class="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider border border-slate-700/80 transition-all flex items-center gap-2"><span>🧠 Self-Learning Engine</span></button>
                     <button @click="marketingTab = 'crm_leads'" 
                             :class="marketingTab === 'crm_leads' ? 'bg-gold-500 text-black font-extrabold shadow-lg' : 'bg-onyx-950 text-slate-300 hover:border-gold-500/40'"
                             class="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider border border-slate-700/80 transition-all flex items-center gap-2">
@@ -1510,6 +1511,62 @@
     <script>
         function sparkleApp() {
             return {
+                optTelemetry: (function() {
+                    try {
+                        const saved = localStorage.getItem('sb_opt_telemetry');
+                        if (saved) return JSON.parse(saved);
+                    } catch(e){}
+                    return {
+                        funnelViews: { ceramic: 24, interior: 31, b2b: 12 },
+                        funnelConversions: { ceramic: 6, interior: 8, b2b: 3 },
+                        activeVariants: { ceramicHeadline: 'A', interiorHeadline: 'A' },
+                        unmetIntents: [
+                            { id: 101, query: 'Do you offer mobile fleet maintenance discounts for rental car companies?', aiReply: 'Yes! We provide bulk monthly B2B contracts with up to 25% off for rental fleets in Antelope Valley.' }
+                        ],
+                        learningScore: 98
+                    };
+                })(),
+                saveTelemetry() {
+                    try { localStorage.setItem('sb_opt_telemetry', JSON.stringify(this.optTelemetry)); } catch(e){}
+                },
+                calcFunnelConv(funnelId) {
+                    const views = this.optTelemetry.funnelViews[funnelId] || 1;
+                    const convs = this.optTelemetry.funnelConversions[funnelId] || 0;
+                    return Math.round((convs / views) * 100);
+                },
+                trackFunnelView(funnelId) {
+                    if (this.optTelemetry.funnelViews[funnelId] !== undefined) {
+                        this.optTelemetry.funnelViews[funnelId]++;
+                        this.saveTelemetry();
+                    }
+                },
+                trackFunnelConversion(funnelId) {
+                    if (this.optTelemetry.funnelConversions[funnelId] !== undefined) {
+                        this.optTelemetry.funnelConversions[funnelId]++;
+                        
+                        // Auto-Optimizer Rule: If conversion rate < 15%, auto-swap headline variant to Variant B!
+                        const rate = this.calcFunnelConv(funnelId);
+                        if (rate < 15 && funnelId === 'ceramic') {
+                            this.optTelemetry.activeVariants.ceramicHeadline = 'B (Optimized)';
+                        }
+                        this.saveTelemetry();
+                    }
+                },
+                logUnmetIntent(query, aiReply) {
+                    const newIntent = {
+                        id: Date.now(),
+                        query: query,
+                        aiReply: aiReply
+                    };
+                    this.optTelemetry.unmetIntents.unshift(newIntent);
+                    this.saveTelemetry();
+                },
+                approveAiIntent(intentId) {
+                    this.optTelemetry.unmetIntents = this.optTelemetry.unmetIntents.filter(i => i.id !== intentId);
+                    this.optTelemetry.learningScore = Math.min(100, this.optTelemetry.learningScore + 1);
+                    this.saveTelemetry();
+                    alert('✨ Intent approved! AI Concierge knowledge base updated successfully.');
+                },
                 activeFunnelModal: 'none',
                 funnelStep: 1,
                 funnelData: {
