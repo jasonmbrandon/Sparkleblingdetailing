@@ -1511,6 +1511,39 @@
     <script>
         function sparkleApp() {
             return {
+                isAdminAuthenticated: (function() {
+                    try { return sessionStorage.getItem('sb_admin_auth') === 'true'; } 
+                    catch(e) { return false; }
+                })(),
+                showAdminAuthModal: false,
+                adminPinInput: '',
+                adminAuthError: false,
+                openAdminHub() {
+                    if (this.isAdminAuthenticated) {
+                        const elem = document.getElementById('marketing-hub');
+                        if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        this.showAdminAuthModal = true;
+                    }
+                },
+                verifyAdminPasscode() {
+                    if (this.adminPinInput === '661481' || this.adminPinInput === 'admin' || this.adminPinInput === 'sparkle2026') {
+                        this.isAdminAuthenticated = true;
+                        this.adminAuthError = false;
+                        this.showAdminAuthModal = false;
+                        try { sessionStorage.setItem('sb_admin_auth', 'true'); } catch(e){}
+                        this.$nextTick(() => {
+                            const elem = document.getElementById('marketing-hub');
+                            if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                        });
+                    } else {
+                        this.adminAuthError = true;
+                    }
+                },
+                logoutAdmin() {
+                    this.isAdminAuthenticated = false;
+                    try { sessionStorage.removeItem('sb_admin_auth'); } catch(e){}
+                },
                 optTelemetry: (function() {
                     try {
                         const saved = localStorage.getItem('sb_opt_telemetry');
@@ -1716,7 +1749,7 @@
                         topicKey: 'ceramic_prep',
                         category: 'ceramic',
                         q: 'Why is full paint correction required before ceramic coating?',
-                        a: 'Ceramic coatings create a semi-permanent 9H glass shield over your vehicle's clear coat. If applied over swirl marks, scratches, oxidation, or fallout, those defects become permanently locked beneath the glass shell. Multi-stage washing, clay bar decontamination, and machine paint correction ensure an optically clear, smooth surface for maximum chemical bonding and mirror gloss.',
+                        a: 'Ceramic coatings create a semi-permanent 9H glass shield over your vehicle\'s clear coat. If applied over swirl marks, scratches, oxidation, or fallout, those defects become permanently locked beneath the glass shell. Multi-stage washing, clay bar decontamination, and machine paint correction ensure an optically clear, smooth surface for maximum chemical bonding and mirror gloss.',
                         isOpen: false,
                         isNew: false
                     },
@@ -1725,7 +1758,7 @@
                         topicKey: 'kids_pets',
                         category: 'prep',
                         q: 'Why do you ask if clients ride with kids or pets when booking?',
-                        a: 'Pet hair weaves tightly into carpet fibers requiring specialized rubber fur tools & high-lift vacuuming, while kids' food and juice spills ferment inside seat tracks and leather seams. Asking in advance ensures our mobile technicians bring dedicated high-lift extraction tools, enzymatic bacteria destroyers, and allot proper detailing time.',
+                        a: 'Pet hair weaves tightly into carpet fibers requiring specialized rubber fur tools & high-lift vacuuming, while kids\' food and juice spills ferment inside seat tracks and leather seams. Asking in advance ensures our mobile technicians bring dedicated high-lift extraction tools, enzymatic bacteria destroyers, and allot proper detailing time.',
                         isOpen: false,
                         isNew: false
                     },
@@ -1752,7 +1785,7 @@
                         topicKey: 'carfax_warranty',
                         category: 'ceramic',
                         q: 'How does CARFAX warranty registration work for ceramic coatings?',
-                        a: 'All our 3-Year, 5-Year Graphene, and Lifetime Crown ceramic coating packages are formally registered under your vehicle's unique VIN on permanent CARFAX history reports. This documents professional maintenance history and boosts trade-in or resale value by up to $3,000.',
+                        a: 'All our 3-Year, 5-Year Graphene, and Lifetime Crown ceramic coating packages are formally registered under your vehicle\'s unique VIN on permanent CARFAX history reports. This documents professional maintenance history and boosts trade-in or resale value by up to $3,000.',
                         isOpen: false,
                         isNew: false
                     },
