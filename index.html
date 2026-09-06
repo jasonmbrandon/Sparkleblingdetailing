@@ -143,8 +143,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <!-- Official Brand Logo -->
             <a href="#" class="flex items-center gap-3 group">
-                <div class="relative w-12 h-12 rounded-full border-2 border-gold-500 bg-onyx-950 p-0.5 shadow-lg shadow-gold-500/20 shrink-0 group-hover:scale-105 transition-transform">
-                    <img src="assets/logo.jpg" alt="Sparkle & Bling Logo" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='assets/logo.png';">
+                <div class="relative w-12 h-12 rounded-full border-2 border-gold-500 bg-onyx-950 p-1 shadow-lg shadow-gold-500/20 shrink-0 group-hover:scale-105 transition-transform flex items-center justify-center">
+                    <img src="assets/emblem.svg" alt="Sparkle & Bling Emblem" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <span class="font-heading font-extrabold text-lg sm:text-xl tracking-wide text-white block leading-none">SPARKLE <span class="gold-gradient-text">& BLING</span></span>
@@ -401,110 +401,207 @@
         </div>
     </section>
 
-    <!-- BEFORE & AFTER PAINT CORRECTION SLIDER -->
+    <!-- BEFORE & AFTER PAINT CORRECTION DEMONSTRATION -->
     <section id="results" class="py-16 px-4 bg-onyx-900 border-y border-gold-500/20">
         <div class="max-w-5xl mx-auto space-y-10 text-center">
             <div class="space-y-3">
-                <span class="text-skyCyan font-semibold uppercase tracking-widest text-xs">REAL RESULTS</span>
+                <span class="text-skyCyan font-semibold uppercase tracking-widest text-xs">AUTHENTIC 50/50 TEST PANEL</span>
                 <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">PAINT CORRECTION BEFORE & AFTER</h2>
-                <p class="text-slate-400 text-sm max-w-xl mx-auto">Inspect how our machine polishing removes heavy scratches, swirl marks, and sun oxidation to reveal deep liquid reflection.</p>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto">Inspect an authentic 50/50 test panel demonstrating how multi-stage machine compounding removes micro-scratches and spiderweb swirls to reveal a deep liquid mirror reflection.</p>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl relative overflow-hidden h-[360px] sm:h-[450px]"
-                 x-data="{ sliderPos: 50 }"
-                 @mousemove="sliderPos = Math.max(0, Math.min(100, (($event.clientX - $el.getBoundingClientRect().left) / $el.getBoundingClientRect().width) * 100))">
-                <img src="assets/before_after.jpg" alt="Paint correction before and after" class="w-full h-full object-cover">
-                <div class="absolute top-4 left-4 bg-red-600/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Swirled Paint</div>
-                <div class="absolute top-4 right-4 bg-green-600/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Ceramic Mirror Gloss</div>
+            <!-- AUTHENTIC 50/50 PAINT CORRECTION IMAGE CONTAINER -->
+            <div class="glass-card p-3 rounded-3xl relative overflow-hidden shadow-2xl border-2 border-gold-500/40">
+                <div class="relative w-full h-[360px] sm:h-[480px] rounded-2xl overflow-hidden">
+                    <img src="assets/before_after.jpg" alt="Authentic 50/50 Paint Correction Test Panel - Swirled Paint vs Ceramic Gloss" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-onyx-950/80 via-transparent to-transparent"></div>
+                    
+                    <!-- OVERLAY LABELS -->
+                    <div class="absolute top-4 left-4 bg-red-600/90 text-white text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>BEFORE: Micro-Swirls & Oxidation</span>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-green-600/90 text-white text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>AFTER: 9H Ceramic Mirror Gloss</span>
+                    </div>
+
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-onyx-950/90 border border-gold-500/40 text-gold-400 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-xl flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>3M Tape Divider — 50/50 Precision Polish</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SCRAPED ORIGINAL SITE PROJECT GALLERY -->
-    <section id="gallery" class="py-20 px-4 bg-onyx-950 border-b border-gold-500/20">
-        <div class="max-w-6xl mx-auto space-y-10 text-center">
+    <!-- SCRAPED ORIGINAL SITE MASTER PORTFOLIO SHOWCASE -->
+    <section id="gallery" class="py-20 px-4 bg-onyx-950 border-b border-gold-500/20"
+             x-data="{ 
+                 activeFilter: 'all',
+                 lightboxOpen: false,
+                 currentImg: 'assets/scraped_photo_45.jpeg',
+                 currentTitle: 'Full Ceramic Coating & Gloss Finish',
+                 currentDesc: 'Multi-stage machine cut & 9H ceramic shield application in Lancaster, CA.',
+                 openLightbox(img, title, desc) {
+                     this.currentImg = img;
+                     this.currentTitle = title;
+                     this.currentDesc = desc;
+                     this.lightboxOpen = true;
+                 }
+             }">
+        <div class="max-w-7xl mx-auto space-y-10 text-center">
             <div class="space-y-3">
-                <span class="text-gold-400 font-semibold uppercase tracking-widest text-xs">AUTHENTIC PORTFOLIO</span>
-                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">AUTHENTIC SPARKLE & BLING PROJECT SHOWCASE</h2>
-                <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">Scraped directly from our official portfolio: ceramic coatings, muscle car paint corrections, and deep interior extractions in Lancaster & Santa Clarita.</p>
+                <span class="text-gold-400 font-semibold uppercase tracking-widest text-xs">SCRAPED WORK PORTFOLIO</span>
+                <h2 class="font-heading font-black text-3xl sm:text-5xl text-white">AUTHENTIC SPARKLE & BLING PROJECT GALLERY</h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Scraped directly from our official project catalog: ceramic coatings, paint corrections, steam extractions, and mobile unit setups across the Antelope Valley & Santa Clarita.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-                <!-- Gallery Card 1 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_45.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <!-- CATEGORY FILTER BUTTONS -->
+            <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+                <button type="button" @click="activeFilter = 'all'" :class="activeFilter === 'all' ? 'bg-gold-500 text-onyx-900 shadow-lg' : 'bg-onyx-800 text-slate-300 border border-slate-700 hover:border-gold-500/40'" class="px-4 py-2 rounded-xl transition-all">✨ All Projects (46)</button>
+                <button type="button" @click="activeFilter = 'ceramic'" :class="activeFilter === 'ceramic' ? 'bg-gold-500 text-onyx-900 shadow-lg' : 'bg-onyx-800 text-slate-300 border border-slate-700 hover:border-gold-500/40'" class="px-4 py-2 rounded-xl transition-all">🛡️ Ceramic Coatings</button>
+                <button type="button" @click="activeFilter = 'paint'" :class="activeFilter === 'paint' ? 'bg-gold-500 text-onyx-900 shadow-lg' : 'bg-onyx-800 text-slate-300 border border-slate-700 hover:border-gold-500/40'" class="px-4 py-2 rounded-xl transition-all">🚘 Paint Correction</button>
+                <button type="button" @click="activeFilter = 'interior'" :class="activeFilter === 'interior' ? 'bg-gold-500 text-onyx-900 shadow-lg' : 'bg-onyx-800 text-slate-300 border border-slate-700 hover:border-gold-500/40'" class="px-4 py-2 rounded-xl transition-all">🧼 Interior Steam</button>
+                <button type="button" @click="activeFilter = 'mobile'" :class="activeFilter === 'mobile' ? 'bg-gold-500 text-onyx-900 shadow-lg' : 'bg-onyx-800 text-slate-300 border border-slate-700 hover:border-gold-500/40'" class="px-4 py-2 rounded-xl transition-all">🚚 Mobile Rigs</button>
+            </div>
+
+            <!-- SHOWCASE GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-left">
+                <!-- Card 1 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'ceramic'" 
+                     @click="openLightbox('assets/scraped_photo_45.jpeg', 'Full 9H Ceramic Shield', 'Multi-stage compounding and certified 9H ceramic coating application in Lancaster, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_45.jpeg" alt="Ceramic Coating Finish" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
                         <span class="absolute bottom-3 left-3 bg-gold-500 text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Ceramic Mirror Gloss</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">Full Ceramic Coating & Gloss Finish</div>
-                        <div class="text-xs text-slate-400">Multi-stage machine cut & 9H ceramic shield application in Lancaster, CA.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Full 9H Ceramic Shield</div>
+                        <div class="text-xs text-slate-400">Lancaster, CA • Showroom Reflection</div>
                     </div>
                 </div>
 
-                <!-- Gallery Card 2 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_46.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <!-- Card 2 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'mobile'" 
+                     @click="openLightbox('assets/scraped_photo_46.jpeg', 'Self-Contained Driveway Concierge', '100% independent deionized water tank and power generator setup in Santa Clarita, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_46.jpeg" alt="Mobile Unit Setup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
-                        <span class="absolute bottom-3 left-3 bg-skyCyan text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Mobile Rig Detailing</span>
+                        <span class="absolute bottom-3 left-3 bg-skyCyan text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Mobile Unit</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">Driveway Concierge Detailing</div>
-                        <div class="text-xs text-slate-400">100% self-contained deionized wash & steam extraction in Santa Clarita, CA.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Self-Contained Driveway Unit</div>
+                        <div class="text-xs text-slate-400">Santa Clarita, CA • Water & Power Provided</div>
                     </div>
                 </div>
 
-                <!-- Gallery Card 3 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_50.jpeg" alt="Sparkle & Bling Original Detailing Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <!-- Card 3 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'paint'" 
+                     @click="openLightbox('assets/scraped_photo_50.jpeg', 'Stage 2 Paint Correction', 'Elimination of micro-swirls, scratches, and severe mineral spots in Valencia, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_50.jpeg" alt="Paint Correction Work" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
                         <span class="absolute bottom-3 left-3 bg-amberAccent text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Paint Correction</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">Swirl & Defect Removal</div>
-                        <div class="text-xs text-slate-400">Level 2 precision compounding restoring clarity to luxury SUV paint in Valencia, CA.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Stage 2 Paint Correction</div>
+                        <div class="text-xs text-slate-400">Valencia, CA • 90%+ Swirl Removal</div>
                     </div>
                 </div>
 
-                <!-- Gallery Card 4 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_47.jpeg" alt="Sparkle & Bling Interior Detail Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <!-- Card 4 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'interior'" 
+                     @click="openLightbox('assets/scraped_photo_47.jpeg', '212°F Steam Interior Sanitation', 'Deep steam extraction, upholstery stain removal, and leather conditioning in Palmdale, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_47.jpeg" alt="Interior Detail Work" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
-                        <span class="absolute bottom-3 left-3 bg-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Interior Steam Detail</span>
+                        <span class="absolute bottom-3 left-3 bg-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Interior Steam</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">212°F Steam & Carpet Extraction</div>
-                        <div class="text-xs text-slate-400">Deep steam sanitation & stain extraction on leather and fabric seating in Palmdale, CA.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">212°F Steam Sanitation</div>
+                        <div class="text-xs text-slate-400">Palmdale, CA • Stain & Odor Removal</div>
                     </div>
                 </div>
 
-                <!-- Gallery Card 5 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_48.jpeg" alt="Sparkle & Bling Engine Bay Detail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <!-- Card 5 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'paint'" 
+                     @click="openLightbox('assets/scraped_photo_48.jpeg', 'Engine Bay Degreasing & Satin Sealant', 'Engine bay degreasing and non-greasy satin sealant dressing in Quartz Hill, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_48.jpeg" alt="Engine Detail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
-                        <span class="absolute bottom-3 left-3 bg-purple-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Engine Bay Detail</span>
+                        <span class="absolute bottom-3 left-3 bg-purple-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Engine Detail</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">Engine Bay Degreasing & Dressing</div>
-                        <div class="text-xs text-slate-400">Precision degreasing and non-greasy satin sealant dressing in Quartz Hill, CA.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Engine Bay Detail</div>
+                        <div class="text-xs text-slate-400">Quartz Hill, CA • Satin Dressing</div>
                     </div>
                 </div>
 
-                <!-- Gallery Card 6 -->
-                <div class="glass-card rounded-2xl overflow-hidden group space-y-3 border-slate-700 hover:border-gold-500/50 transition-all">
-                    <div class="h-64 overflow-hidden relative">
-                        <img src="assets/scraped_photo_53.jpeg" alt="Sparkle & Bling Ceramic Graphene Protection" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <!-- Card 6 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'ceramic'" 
+                     @click="openLightbox('assets/scraped_photo_53.jpeg', 'Lifetime Crown Graphene Armor', '3-Stage correction, self-healing Graphene matrix & CARFAX VIN registration in Stevenson Ranch.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_53.jpeg" alt="Lifetime Graphene" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
                         <span class="absolute bottom-3 left-3 bg-gold-500 text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">👑 Lifetime Graphene</span>
                     </div>
                     <div class="p-4 space-y-1">
-                        <div class="text-white font-bold text-base">Flagship Lifetime Crown Graphene Armor</div>
-                        <div class="text-xs text-slate-400">3-Stage correction, self-healing Graphene matrix & CARFAX VIN registration in Valencia Estates.</div>
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Lifetime Crown Graphene Armor</div>
+                        <div class="text-xs text-slate-400">Stevenson Ranch, CA • CARFAX Registered</div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'ceramic'" 
+                     @click="openLightbox('assets/scraped_photo_11.jpeg', '5-Year Graphene Matrix Coating', 'Hydrophobic ceramic matrix coating application on luxury SUV paint in Lancaster.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_11.jpeg" alt="Scraped Detail Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-gold-500 text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">5-Yr Ceramic</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">5-Year Graphene Matrix</div>
+                        <div class="text-xs text-slate-400">Lancaster, CA • Ultra Hydrophobic</div>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div x-show="activeFilter === 'all' || activeFilter === 'paint'" 
+                     @click="openLightbox('assets/scraped_photo_15.jpeg', 'Muscle Car Paint Restoration', 'Precision multi-cut polish on dark paintwork in Palmdale, CA.')"
+                     class="glass-card rounded-2xl overflow-hidden group border-slate-700 hover:border-gold-500/60 cursor-pointer transition-all">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="assets/scraped_photo_15.jpeg" alt="Scraped Detail Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-amberAccent text-onyx-900 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Paint Correction</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <div class="text-white font-bold text-sm group-hover:text-gold-400 transition-colors">Paint Correction Polish</div>
+                        <div class="text-xs text-slate-400">Palmdale, CA • Scratch Removal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIGHTBOX FULLSCREEN MODAL -->
+            <div x-show="lightboxOpen" @click.away="lightboxOpen = false" x-cloak class="fixed inset-0 z-50 bg-onyx-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+                <button @click="lightboxOpen = false" class="absolute top-6 right-6 text-slate-400 hover:text-white text-3xl font-light z-50"><i class="fa-solid fa-xmark"></i></button>
+                <div class="max-w-4xl w-full space-y-4 text-left">
+                    <div class="relative h-[65vh] rounded-3xl overflow-hidden border-2 border-gold-500/40 shadow-2xl">
+                        <img :src="currentImg" :alt="currentTitle" class="w-full h-full object-contain bg-onyx-900">
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-card p-6 rounded-2xl">
+                        <div>
+                            <div class="font-heading font-extrabold text-xl text-white" x-text="currentTitle"></div>
+                            <div class="text-xs text-slate-300 mt-1" x-text="currentDesc"></div>
+                        </div>
+                        <button @click="lightboxOpen = false; chatOpen = true" class="gold-btn text-onyx-900 text-xs font-bold px-6 py-3 rounded-xl shrink-0">Book This Detail Package</button>
                     </div>
                 </div>
             </div>
@@ -839,7 +936,9 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
             <div class="space-y-3">
                 <div class="flex items-center gap-2">
-                    <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border-2 border-gold-500 bg-onyx-950 p-0.5 object-cover" onerror="this.onerror=null; this.src='assets/logo.png';">
+                    <div class="w-8 h-8 rounded-full border-2 border-gold-500 bg-onyx-950 p-0.5 flex items-center justify-center">
+                        <img src="assets/emblem.svg" alt="Sparkle & Bling Emblem" class="w-full h-full object-contain">
+                    </div>
                     <span class="font-heading font-black text-white text-base">SPARKLE & BLING</span>
                 </div>
                 <p class="text-slate-400 leading-relaxed">Premium mobile auto detailing, paint correction, and certified ceramic coatings delivered directly to your driveway.</p>
@@ -878,8 +977,10 @@
 
     <!-- AI BOOKING CHAT CONCIERGE -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button @click="chatOpen = !chatOpen" type="button" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center text-onyx-900 text-xl shadow-2xl relative overflow-hidden p-0.5 border-2 border-gold-400">
-            <img src="assets/logo.jpg" alt="Logo" class="w-full h-full rounded-full object-cover" x-show="!chatOpen" onerror="this.onerror=null; this.src='assets/logo.png';">
+        <button @click="chatOpen = !chatOpen" type="button" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center text-onyx-900 text-xl shadow-2xl relative overflow-hidden p-1 border-2 border-gold-400">
+            <div class="w-full h-full flex items-center justify-center" x-show="!chatOpen">
+                <img src="assets/emblem.svg" alt="Sparkle Emblem" class="w-full h-full object-contain">
+            </div>
             <i class="fa-solid fa-xmark text-lg text-onyx-900 font-black" x-show="chatOpen"></i>
         </button>
 
@@ -888,7 +989,9 @@
             
             <div class="bg-onyx-900 p-4 border-b border-gold-500/30 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <img src="assets/logo.jpg" alt="Sparkle AI Logo" class="w-9 h-9 rounded-full object-cover border border-gold-400 bg-onyx-950 p-0.5" onerror="this.onerror=null; this.src='assets/logo.png';">
+                    <div class="w-9 h-9 rounded-full border border-gold-400 bg-onyx-950 p-1 flex items-center justify-center">
+                        <img src="assets/emblem.svg" alt="Sparkle AI Emblem" class="w-full h-full object-contain">
+                    </div>
                     <div>
                         <div class="font-heading font-bold text-white text-sm">Sparkle AI Concierge</div>
                         <div class="text-[10px] text-skyCyan flex items-center gap-1">
@@ -902,7 +1005,9 @@
 
             <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="chatLog">
                 <div class="flex gap-2">
-                    <img src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-gold-400" onerror="this.onerror=null; this.src='assets/logo.png';">
+                    <div class="w-6 h-6 rounded-full shrink-0 border border-gold-400 bg-onyx-950 p-0.5 flex items-center justify-center">
+                        <img src="assets/emblem.svg" alt="AI Avatar" class="w-full h-full object-contain">
+                    </div>
                     <div class="bg-onyx-800 text-slate-200 p-3 rounded-xl border border-gold-500/20 space-y-1">
                         <p class="font-bold text-gold-400">Hi! Welcome to Sparkle & Bling 👋</p>
                         <p>How can I help you today? Ask about ceramic quotes, mobile water/power availability, or book a appointment!</p>
@@ -911,7 +1016,9 @@
 
                 <template x-for="(msg, idx) in chatMessages" :key="idx">
                     <div class="flex gap-2" :class="msg.role === 'user' ? 'justify-end' : ''">
-                        <img x-show="msg.role === 'ai'" src="assets/logo.jpg" alt="AI Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-gold-400" onerror="this.onerror=null; this.src='assets/logo.png';">
+                        <div x-show="msg.role === 'ai'" class="w-6 h-6 rounded-full shrink-0 border border-gold-400 bg-onyx-950 p-0.5 flex items-center justify-center">
+                            <img src="assets/emblem.svg" alt="AI Avatar" class="w-full h-full object-contain">
+                        </div>
                         <div :class="msg.role === 'user' ? 'gold-btn text-onyx-900 font-medium' : 'bg-onyx-800 text-slate-200 border border-gold-500/20'"
                              class="p-3 rounded-xl max-w-[85%]">
                             <p x-text="msg.text"></p>
