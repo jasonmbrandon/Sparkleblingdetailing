@@ -1851,15 +1851,53 @@
 
                     setTimeout(() => {
                         const lower = query.toLowerCase();
-                        let aiReply = "Thank you! What is your vehicle Year/Make/Model, and would morning or afternoon work better for your mobile appointment in Lancaster, Palmdale, or Santa Clarita?";
+                        let aiReply = "";
                         let topicKey = null;
                         let topicTitle = '';
                         let topicCategory = 'general';
                         let proceduralAnswer = '';
 
-                        // 1. Semantic Topic Matching Engine (Normalizes phrasing variations to single Topic Keys)
                         const hasWord = (str, keywords) => keywords.some(k => str.includes(k));
 
+                        // 1. VEHICLE YEAR / MAKE / MODEL RECOGNITION & INSTANT PRICING ENGINE
+                        const midSuvKeywords = ['rogue', 'rouge', 'rav4', 'crv', 'cr-v', 'explorer', 'cherokee', 'model y', 'rx', 'cx-5', 'cx5', 'equinox', 'tucson', 'sportage', 'outback', 'forester', 'highlander', 'pilot', 'passport', 'edge', 'crossover', 'mid suv', 'midsize suv'];
+                        const fullSuvKeywords = ['tahoe', 'suburban', 'yukon', 'expedition', 'f150', 'f-150', 'silverado', 'ram', 'sienna', 'odyssey', 'escalade', 'navigator', 'armada', 'sequoia', 'telluride', 'palisade', 'full suv', 'truck', 'van', 'minivan'];
+                        const sedanKeywords = ['civic', 'accord', 'camry', 'corolla', 'model 3', '3 series', '3-series', 'c-class', 'mustang', 'corvette', 'challenger', 'charger', 'altima', 'maxima', 'sentra', 'elantra', 'sonata', 'jetta', 'passat', 'sedan', 'coupe'];
+
+                        let detectedVType = null;
+                        let detectedVName = "";
+
+                        if (hasWord(lower, midSuvKeywords)) {
+                            detectedVType = 'mid_suv';
+                            detectedVName = "Mid-Size SUV / Crossover";
+                        } else if (hasWord(lower, fullSuvKeywords)) {
+                            detectedVType = 'full_suv';
+                            detectedVName = "Full-Size SUV / Truck";
+                        } else if (hasWord(lower, sedanKeywords)) {
+                            detectedVType = 'sedan';
+                            detectedVName = "Sedan / Coupe";
+                        } else if (/\b(20\d\d|19\d\d)\b/.test(lower) || lower.includes('nissan') || lower.includes('toyota') || lower.includes('honda') || lower.includes('ford') || lower.includes('chevy') || lower.includes('chevrolet') || lower.includes('tesla') || lower.includes('bmw') || lower.includes('mercedes') || lower.includes('audi') || lower.includes('lexus')) {
+                            // General vehicle match default to mid_suv if unclear
+                            detectedVType = 'mid_suv';
+                            detectedVName = "Vehicle";
+                        }
+
+                        if (detectedVType) {
+                            this.vType = detectedVType;
+                            const sigPrice = this.getPkgBase('signature');
+                            const cerPrice = this.getPkgBase('ceramic_3yr');
+                            const expPrice = this.getPkgBase('express');
+
+                            aiReply = `Awesome! I've set your vehicle type to **${detectedVName}**. Here are your instant mobile driveway rates for Lancaster, Palmdale, & Santa Clarita:
+
+✨ **Signature Full Detail**: $${sigPrice} *(Includes 212°F thermal steam sanitation, hot water carpet extraction & paint correction)*
+🛡️ **3-Year Ceramic Shield**: $${cerPrice} *(Includes multi-stage compounding & official CARFAX VIN registration)*
+🚗 **Express Wash & Wax**: $${expPrice}
+
+Would morning or afternoon work better for your mobile appointment? Reply with your phone number and address to lock in your reservation!`;
+                        }
+
+                        // 2. PROCEDURAL & KNOWLEDGE BASE INTENT CLASSIFICATION (Overrides default if specific question asked)
                         const ceramicKeywords = ['ceramic', 'graphene', 'coating', 'coat', '9h', 'sealant'];
                         const prepKeywords = ['why', 'before', 'require', 'prep', 'need', 'polish', 'compound', 'clean', 'prior', 'first', 'necessary', 'point', 'dirty', 'without', 'reason', 'should i'];
 
@@ -1874,7 +1912,17 @@
 
                         const carfaxKeywords = ['carfax', 'resale', 'vin', 'history', 'report', 'warranty', 'log', 'register'];
 
-                        if (hasWord(lower, ceramicKeywords) && hasWord(lower, prepKeywords)) {
+                        // Check "What happens in a full detail" / "What is included"
+                        if (lower.includes('full detail') || lower.includes('signature detail') || (lower.includes('what') && (lower.includes('happens') || lower.includes('included') || lower.includes('do you do')))) {
+                            topicKey = 'full_detail_process';
+                            topicTitle = 'What is included in a Signature Full Detail?';
+                            topicCategory = 'prep';
+                            proceduralAnswer = `Our **Signature Full Detail** is a comprehensive top-to-bottom transformation:
+
+1. **Exterior**: Hand wash using 0-PPM spot-free deionized water, wheel barrel decontamination, clay bar paint treatment, and a 1-stage machine paint enhancement to eliminate light swirl marks.
+2. **Interior**: Deep thermal steam sanitation at 212°F inside AC vents & seat rails, hot-water carpet extraction to pull ground-in dirt, spills, and pet odors, leather cleansing & conditioning, and UV dashboard protection.
+3. **Protection**: Sealed with hydrophobic gloss ceramic spray protection on paint & glass!`;
+                        } else if (hasWord(lower, ceramicKeywords) && hasWord(lower, prepKeywords)) {
                             topicKey = 'ceramic_prep';
                             topicTitle = 'Why is full paint correction required before ceramic coating?';
                             topicCategory = 'ceramic';
@@ -1916,7 +1964,7 @@
                             aiReply = "Awesome! To lock in your mobile driveway reservation, please reply with your Full Name, Phone Number, Vehicle Model, and Service Address or call us directly at (661) 481-5317!";
                         }
 
-                        // 2. Handle procedural frequency tracking & 2-occurrence threshold rule
+                        // 3. Handle procedural frequency tracking & 2-occurrence threshold rule
                         if (topicKey && proceduralAnswer) {
                             this.questionTracker[topicKey] = (this.questionTracker[topicKey] || 0) + 1;
                             try {
@@ -1928,11 +1976,9 @@
 
                             if (currentCount >= 2) {
                                 if (existingFaqIndex !== -1) {
-                                    // Mark as commonly asked
                                     this.faqItems[existingFaqIndex].isNew = true;
                                     this.faqItems[existingFaqIndex].isOpen = true;
                                 } else {
-                                    // Add to live FAQ list!
                                     this.faqItems.unshift({
                                         id: Date.now(),
                                         topicKey: topicKey,
@@ -1943,11 +1989,19 @@
                                         isNew: true
                                     });
                                 }
-                                aiReply = proceduralAnswer + `\n\n⚡ **Client FAQ Alert**: This question has now been asked **${currentCount} times** by clients! It has been automatically published to our live [FAQ section](#faq) below for future visitor reference.`;
+                                aiReply = proceduralAnswer + `
+
+⚡ **Client FAQ Alert**: This question has now been asked **${currentCount} times** by clients! It has been automatically published to our live [FAQ section](#faq) below for future visitor reference.`;
                             } else {
-                                // First occurrence (count == 1)
-                                aiReply = proceduralAnswer + `\n\n*(Logged Inquiry Count: 1. Note: Questions asked 2+ times by clients are automatically published to our live FAQ page!)*`;
+                                aiReply = proceduralAnswer + `
+
+*(Logged Inquiry Count: 1. Note: Questions asked 2+ times by clients are automatically published to our live FAQ page!)*`;
                             }
+                        }
+
+                        // Default Fallback Greeting if nothing was set
+                        if (!aiReply) {
+                            aiReply = "Thank you for reaching out to Sparkle & Bling Mobile Detailing! What is your vehicle Year/Make/Model, and would morning or afternoon work best for your mobile appointment in Lancaster, Palmdale, or Santa Clarita?";
                         }
 
                         this.chatMessages.push({ role: 'ai', text: aiReply });
