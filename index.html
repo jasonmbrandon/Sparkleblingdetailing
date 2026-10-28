@@ -147,26 +147,20 @@
             </a>
 
             <!-- Desktop Nav Links -->
-            <nav class="hidden lg:flex items-center gap-4 xl:gap-7 font-medium text-xs xl:text-sm text-slate-300">
-                <a href="#services" class="hover:text-gold-400 transition-colors">Services & Packages</a>
-                <a href="#why-us" class="hover:text-gold-400 transition-colors whitespace-nowrap">Why Choose Us</a>
-                <a href="#results" class="hover:text-gold-400 transition-colors whitespace-nowrap">Before & After</a>
-                <a href="#estimator" class="hover:text-gold-400 transition-colors whitespace-nowrap">Price Estimator</a>
-                <a href="#faq" class="hover:text-gold-400 transition-colors whitespace-nowrap">FAQ</a>
-                <a href="#marketing-hub" @click.prevent="openAdminHub()" class="hover:text-gold-400 transition-colors whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40 text-[11px] mr-1">🔒 ADMIN</span>Marketing Hub</a>
+            <nav class="hidden lg:flex items-center gap-5 xl:gap-8 font-medium text-sm text-slate-300 whitespace-nowrap" aria-label="Main">
+                <a href="#services" class="hover:text-gold-400 transition-colors">Services</a>
+                <a href="#results" class="hover:text-gold-400 transition-colors">Before &amp; After</a>
+                <a href="#estimator" class="hover:text-gold-400 transition-colors">Pricing</a>
                 <a href="#reviews" class="hover:text-gold-400 transition-colors">Reviews</a>
+                <a href="#faq" class="hover:text-gold-400 transition-colors">FAQ</a>
             </nav>
 
             <!-- Call & Book CTAs -->
             <div class="flex items-center gap-3 ml-6 xl:ml-10 shrink-0">
-                <button @click="openCeramicFunnel('3yr_shield')" type="button" class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-gold-500/20 to-gold-400/10 text-gold-400 border border-gold-500/50 hover:bg-gold-500 hover:text-black transition-all shadow-md">
-                    <i class="fa-solid fa-gem text-gold-400"></i>
-                    <span>$150 Ceramic Voucher</span>
-                </button>
-                <a href="tel:6614815317" class="hidden sm:inline-flex items-center gap-2 bg-onyx-800 hover:bg-onyx-700 text-gold-400 border border-gold-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition-all">
+                <a href="tel:6614815317" class="hidden sm:inline-flex items-center gap-2 bg-onyx-800 hover:bg-onyx-700 text-gold-400 border border-gold-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition-all whitespace-nowrap">
                     <i class="fa-solid fa-phone"></i> (661) 481-5317
                 </a>
-                <button @click="openBooking()" type="button" class="gold-btn text-onyx-900 font-heading font-extrabold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl flex items-center gap-2">
+                <button @click="openBooking()" type="button" class="gold-btn text-onyx-900 font-heading font-extrabold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Book Online</span>
                 </button>
@@ -1456,7 +1450,7 @@
 
     
     <!-- BUSINESS OWNER ADMIN HUB -->
-    <section id="marketing-hub" class="py-20 px-4 bg-onyx-950 relative border-t border-gold-500/20">
+    <section id="marketing-hub" x-show="isAdminAuthenticated || adminEntry" x-cloak class="py-20 px-4 bg-onyx-950 relative border-t border-gold-500/20">
         <!-- LOCKED STATE -->
         <div x-show="!isAdminAuthenticated" class="max-w-4xl mx-auto bg-onyx-900/90 border border-slate-800 rounded-3xl p-10 text-center">
             <div class="w-16 h-16 bg-gold-500/10 border border-gold-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gold-400 text-3xl">🔒</div>
@@ -2077,10 +2071,10 @@
    calls them) — never put passwords or API keys in this block.
    ===================================================================== */
 const SB_CONFIG = {
-    bookingApi:   '',   // n8n "Sparkle – Booking API"  e.g. https://YOUR-N8N/webhook/sparkle-book
-    chatWebhook:  '',   // n8n "Sparkle – Chat Agent"   e.g. https://YOUR-N8N/webhook/sparkle-chat
-    leadWebhook:  '',   // n8n "Sparkle – Lead Intake"  e.g. https://YOUR-N8N/webhook/sparkle-leads
-    adminWebhook: '',   // n8n "Sparkle – Admin API"    e.g. https://YOUR-N8N/webhook/sparkle-admin
+    bookingApi:   'https://n8n-production-86e81.up.railway.app/webhook/sparkle-book',   // n8n "Sparkle – Booking API"  e.g. https://YOUR-N8N/webhook/sparkle-book
+    chatWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-chat',   // n8n "Sparkle – Chat Agent"   e.g. https://YOUR-N8N/webhook/sparkle-chat
+    leadWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-leads',   // n8n "Sparkle – Lead Intake"  e.g. https://YOUR-N8N/webhook/sparkle-leads
+    adminWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-admin',   // n8n "Sparkle – Admin API"    e.g. https://YOUR-N8N/webhook/sparkle-admin
     bookingLink:  '',   // optional public booking page (Calendly / Google appointment schedule)
     phoneDisplay: '(661) 481-5317',
     phoneTel: '6614815317',
@@ -2751,7 +2745,7 @@ function sparkleApp() {
                 this.$nextTick(() => { const el = document.getElementById('marketing-hub'); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
             }
         },
-        logoutAdmin() { this.adminKey = ''; this.leads = []; this.setAdminMode('off'); },
+        logoutAdmin() { this.adminKey = ''; this.leads = []; this.setAdminMode('off'); this.adminEntry = false; if (location.hash === '#admin') history.replaceState(null, '', location.pathname); },
         async adminCall(action, extra) {
             if (this.adminMode !== 'live') return { ok: false, error: 'preview' };
             const r = await sbPost(this.adminUrl(), Object.assign({ action }, extra || {}), { 'X-Admin-Key': this.adminKey }, 20000);
@@ -3047,7 +3041,18 @@ function sparkleApp() {
         ],
 
         avatar: '',
+        /* Admin is hidden from visitors. Owners open it with the private link  yoursite.com/#admin  */
+        adminEntry: false,
+        checkAdminHash() {
+            if (location.hash === '#admin') {
+                this.adminEntry = true;
+                if (!this.isAdminAuthenticated) this.showAdminAuthModal = true;
+                else this.$nextTick(() => { const el = document.getElementById('marketing-hub'); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
+            }
+        },
         init() {
+            this.checkAdminHash();
+            window.addEventListener('hashchange', () => this.checkAdminHash());
             const em = document.getElementById('chatEmblem');
             this.avatar = em ? em.src : '';
             if (this.adminMode === 'live') this.loadLeads();
