@@ -1484,9 +1484,9 @@
                         { id: 'test_lab', label: '🧪 Agent Test Lab' },
                         { id: 'insights', label: '🧠 Agent Insights' },
                         { id: 'n8n_integration', label: '🔗 n8n Setup & Health' },
-                        { id: 'campaigns', label: '✍️ Ad Drafts' },
-                        { id: 'content_calendar', label: '📅 Content Plan' },
-                        { id: 'social_connections', label: '🌐 Channels' }
+                        { id: 'campaigns', label: '✍️ AI Ads' },
+                        { id: 'content_calendar', label: '📣 Social Posts' },
+                        { id: 'social_connections', label: '⭐ Reviews & Follow-ups' }
                     ]" :key="t.id">
                         <button type="button" role="tab" :aria-selected="marketingTab === t.id" @click="marketingTab = t.id"
                                 :class="marketingTab === t.id ? 'bg-gold-500 text-black font-extrabold shadow-lg border-gold-500' : 'bg-onyx-950 text-slate-300 border-slate-700/80 hover:border-gold-500/40'"
@@ -1592,6 +1592,22 @@
                                     </template>
                                 </section>
                             </div>
+
+                            <section class="min-w-0 bg-onyx-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+                                <h3 class="text-sm font-bold text-white">Marketing</h3>
+                                <div class="grid sm:grid-cols-2 gap-3 text-xs">
+                                    <label class="block"><span class="block text-slate-400 mb-1">Website</span><input type="url" x-model="settingsDraft.business.website" placeholder="https://www.sparkleblingdetailing.com" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                    <label class="block"><span class="block text-slate-400 mb-1">Google review link</span><input type="url" x-model="settingsDraft.business.reviewLink" placeholder="https://g.page/r/…/review" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                    <div class="flex flex-wrap items-center gap-2"><label class="inline-flex items-center gap-2 text-slate-200"><input type="checkbox" x-model="settingsDraft.marketing.reviewRequests" class="accent-gold-500"> Ask for a Google review</label>
+                                        <input type="number" min="0" max="14" x-model="settingsDraft.marketing.reviewDelayDays" aria-label="Days after the job" class="w-16 bg-onyx-900 border border-slate-700 rounded-lg px-2 py-1 text-white"><span class="text-slate-400">day(s) after the job</span></div>
+                                    <div class="flex flex-wrap items-center gap-2"><label class="inline-flex items-center gap-2 text-slate-200"><input type="checkbox" x-model="settingsDraft.marketing.followUps" class="accent-gold-500"> Follow up on quotes after</label>
+                                        <input type="number" min="12" max="336" x-model="settingsDraft.marketing.followUpHours" aria-label="Hours before follow-up" class="w-16 bg-onyx-900 border border-slate-700 rounded-lg px-2 py-1 text-white"><span class="text-slate-400">hours</span></div>
+                                    <label class="block sm:col-span-2"><span class="block text-slate-400 mb-1">Current offer (used in ads, posts and follow-ups)</span><input type="text" x-model="settingsDraft.marketing.offer" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                    <label class="block sm:col-span-2"><span class="block text-slate-400 mb-1">Brand voice for AI</span><input type="text" x-model="settingsDraft.marketing.voice" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                    <label class="block"><span class="block text-slate-400 mb-1">Facebook Page ID (optional, for posting)</span><input type="text" inputmode="numeric" x-model="settingsDraft.marketing.facebookPageId" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                    <label class="block"><span class="block text-slate-400 mb-1">Instagram account ID (optional)</span><input type="text" inputmode="numeric" x-model="settingsDraft.marketing.instagramUserId" class="w-full bg-onyx-900 border border-slate-700 rounded-lg px-2.5 py-2 text-white"></label>
+                                </div>
+                            </section>
 
                             <section class="min-w-0 bg-onyx-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3 overflow-x-auto">
                                 <h3 class="text-sm font-bold text-white">Services & prices</h3>
@@ -1807,7 +1823,8 @@
                                 { key: 'booking', label: 'Booking API (booking form)', url: cfg.bookingApi },
                                 { key: 'chat', label: 'Chat agent', url: cfg.chatWebhook },
                                 { key: 'lead', label: 'Lead intake', url: cfg.leadWebhook },
-                                { key: 'admin', label: 'Admin API', url: adminUrl() }
+                                { key: 'admin', label: 'Admin API', url: adminUrl() },
+                                { key: 'marketing', label: 'Marketing API (AI drafts & posting)', url: cfg.marketingWebhook }
                             ]" :key="row.key">
                                 <div class="p-3 rounded-xl bg-onyx-900 border border-slate-800">
                                     <div class="flex items-center justify-between gap-2">
@@ -1841,70 +1858,117 @@
 
                 <!-- TAB: AD DRAFTS -->
                 <div x-show="marketingTab === 'campaigns'" class="space-y-5">
-                    <div class="grid md:grid-cols-2 gap-5">
-                        <div class="bg-onyx-950 p-5 rounded-2xl border border-slate-800 space-y-4">
-                            <h3 class="text-base font-bold text-white">Ad copy starter</h3>
-                            <p class="text-[11px] text-slate-400">Pre-written drafts for each offer. Copy one and paste it into Meta Ads Manager, Google Ads or Nextdoor — nothing is published from here.</p>
-                            <div>
-                                <label for="adPlatform" class="block text-xs font-semibold text-slate-400 mb-1">Platform</label>
-                                <select id="adPlatform" x-model="aiCampaignForm.platform" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
-                                    <option>Meta (Facebook & Instagram Ads)</option><option>Google Search Ads (Local Intent)</option><option>TikTok Video Feed Ads</option><option>Nextdoor Neighborhood Ads</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="adOffer" class="block text-xs font-semibold text-slate-400 mb-1">Offer</label>
-                                <select id="adOffer" x-model="aiCampaignForm.packageTarget" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
-                                    <option value="ceramic_3yr">Ceramic coatings ($150 off prep)</option>
-                                    <option value="interior_steam">Interior steam sanitation (free add-on)</option>
-                                    <option value="paint_correction">Paint correction</option>
-                                    <option value="b2b_fleet">Fleet contracts</option>
-                                </select>
-                            </div>
-                            <button @click="generateAiAdCopy()" class="w-full py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider hover:bg-gold-400">Show draft</button>
+                    <div class="grid lg:grid-cols-5 gap-5">
+                        <div class="lg:col-span-2 bg-onyx-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                            <h3 class="text-base font-bold text-white">Write ads with AI</h3>
+                            <p class="text-[11px] text-slate-400">Uses your real prices, service area and offer from Settings. Copy a version into Meta Ads Manager, Google Ads or Nextdoor.</p>
+                            <label class="block"><span class="block text-xs font-semibold text-slate-400 mb-1">What to promote</span>
+                                <select x-model="mk.focus" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white"><template x-for="f in mkFocusOptions" :key="f"><option :value="f" x-text="f"></option></template></select></label>
+                            <label class="block"><span class="block text-xs font-semibold text-slate-400 mb-1">Where it will run</span>
+                                <select x-model="mk.platform" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white"><template x-for="f in mkPlatforms" :key="f"><option :value="f" x-text="f"></option></template></select></label>
+                            <label class="block"><span class="block text-xs font-semibold text-slate-400 mb-1">Area to target (optional)</span>
+                                <input type="text" x-model="mk.area" placeholder="e.g. Henderson, NV or Lancaster & Palmdale" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white"></label>
+                            <label class="block"><span class="block text-xs font-semibold text-slate-400 mb-1">Anything specific? (optional)</span>
+                                <textarea x-model="mk.notes" rows="2" placeholder="e.g. mention we're new in Henderson, focus on Teslas" class="w-full bg-onyx-900 border border-slate-700 rounded-xl p-3 text-sm text-white"></textarea></label>
+                            <button type="button" @click="mkDraft('ad')" :disabled="!!mk.busy" class="w-full py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider hover:bg-gold-400 disabled:opacity-60" x-text="mk.busy === 'ad' ? 'Writing… (10–20 sec)' : 'Write 3 ad versions'"></button>
+                            <p x-show="mk.error" class="text-[11px] text-amber-300" x-text="mk.error"></p>
                         </div>
-                        <div class="bg-onyx-950 p-5 rounded-2xl border border-gold-500/30 flex flex-col justify-between">
-                            <div x-show="!generatedAd" class="text-center py-12 text-slate-500 text-sm">Pick an offer and click "Show draft".</div>
-                            <div x-show="generatedAd" class="space-y-3 text-xs text-slate-300">
-                                <div class="bg-onyx-900 p-3 rounded-xl border border-slate-800"><span class="text-gold-400 font-bold block mb-1">HEADLINE</span><p x-text="generatedAd?.headline" class="font-bold text-white text-sm"></p></div>
-                                <div class="bg-onyx-900 p-3 rounded-xl border border-slate-800"><span class="text-gold-400 font-bold block mb-1">BODY</span><p x-text="generatedAd?.body"></p></div>
-                                <div class="bg-onyx-900 p-3 rounded-xl border border-slate-800"><span class="text-gold-400 font-bold block mb-1">TARGETING IDEAS</span><p x-text="generatedAd?.targeting"></p></div>
-                                <div class="bg-onyx-900 p-3 rounded-xl border border-slate-800"><span class="text-gold-400 font-bold block mb-1">IMAGE IDEA</span><p x-text="generatedAd?.imagePrompt" class="italic text-slate-400"></p></div>
-                            </div>
-                            <div x-show="generatedAd" class="mt-4 flex items-center gap-3">
-                                <button @click="copyText(adAsText(), 'Ad copied')" class="flex-1 py-3 rounded-xl bg-onyx-900 border border-gold-500/50 text-gold-400 font-extrabold text-xs uppercase tracking-wider hover:bg-gold-500 hover:text-black">Copy ad text</button>
+                        <div class="lg:col-span-3 space-y-3">
+                            <div x-show="!mk.ad && !generatedAd" class="bg-onyx-950 p-5 rounded-2xl border border-slate-800 text-center py-16 text-slate-500 text-sm">Pick what to promote and click "Write 3 ad versions".</div>
+                            <template x-if="mk.ad">
+                                <div class="space-y-3">
+                                    <template x-for="(v, i) in mk.ad.variants" :key="i">
+                                        <div class="bg-onyx-950 p-4 rounded-2xl border border-gold-500/30 space-y-2 text-xs text-slate-300">
+                                            <div class="flex items-center justify-between gap-2"><span class="text-gold-400 font-bold" x-text="'VERSION ' + (i + 1)"></span>
+                                                <button type="button" @click="copyText(variantAsText(v), 'Version ' + (i + 1) + ' copied')" class="px-3 py-1.5 rounded-lg border border-gold-500/50 text-gold-400 font-bold text-[11px] hover:bg-gold-500 hover:text-black">Copy</button></div>
+                                            <p class="font-bold text-white text-sm" x-text="v.headline"></p>
+                                            <p class="whitespace-pre-line" x-text="v.primaryText"></p>
+                                            <p class="text-slate-400"><span x-text="v.description"></span> <span x-show="v.cta" class="ml-2 px-2 py-0.5 rounded bg-onyx-800 text-white" x-text="v.cta"></span></p>
+                                        </div>
+                                    </template>
+                                    <div class="bg-onyx-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-2">
+                                        <p><span class="text-gold-400 font-bold">TARGETING: </span><span x-text="mk.ad.targeting"></span></p>
+                                        <p><span class="text-gold-400 font-bold">PHOTO / VIDEO: </span><span class="italic text-slate-400" x-text="mk.ad.imageIdea"></span></p>
+                                    </div>
+                                    <p class="text-[11px] text-emerald-300" x-text="copiedNote"></p>
+                                </div>
+                            </template>
+                            <div x-show="generatedAd && !mk.ad" class="bg-onyx-950 p-5 rounded-2xl border border-gold-500/30 space-y-3 text-xs text-slate-300">
+                                <span class="text-[10px] font-bold uppercase text-amber-300">Template (offline)</span>
+                                <p x-text="generatedAd?.headline" class="font-bold text-white text-sm"></p>
+                                <p x-text="generatedAd?.body"></p>
+                                <p><span class="text-gold-400 font-bold">TARGETING: </span><span x-text="generatedAd?.targeting"></span></p>
+                                <button type="button" @click="copyText(adAsText(), 'Ad copied')" class="px-3 py-1.5 rounded-lg border border-gold-500/50 text-gold-400 font-bold text-[11px]">Copy</button>
                                 <span class="text-[11px] text-emerald-300" x-text="copiedNote"></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB: CONTENT PLAN -->
+                <!-- TAB: SOCIAL POSTS -->
                 <div x-show="marketingTab === 'content_calendar'" class="space-y-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <div><h3 class="text-base font-bold text-white">Weekly posting plan</h3><p class="text-[11px] text-slate-400">A repeatable template. Edit captions here, then copy the week into your scheduler.</p></div>
-                        <div class="flex items-center gap-2"><span class="text-[11px] text-emerald-300" x-text="copiedNote"></span><button @click="copyText(calendarAsText(), 'Week copied')" class="px-3.5 py-1.5 rounded-lg bg-gold-500 text-black font-bold text-xs">Copy week</button></div>
+                    <div class="flex flex-wrap items-end justify-between gap-3">
+                        <div><h3 class="text-base font-bold text-white">This week's posts</h3>
+                            <p class="text-[11px] text-slate-400">AI writes 7 posts from your Settings. Edit, then copy — or post straight to Facebook / Instagram once they're connected in Settings → Marketing.</p>
+                            <p x-show="mk.weekNote" class="text-[11px] text-emerald-300 mt-1" x-text="mk.weekNote"></p></div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select x-model="mk.focus" aria-label="Main topic" class="bg-onyx-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white"><template x-for="f in mkFocusOptions" :key="f"><option :value="f" x-text="f"></option></template></select>
+                            <input type="text" x-model="mk.area" placeholder="Area (optional)" aria-label="Area" class="w-36 bg-onyx-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white">
+                            <button type="button" @click="mkDraft('week')" :disabled="!!mk.busy" class="px-3.5 py-1.5 rounded-lg bg-gold-500 text-black font-bold text-xs disabled:opacity-60" x-text="mk.busy === 'week' ? 'Writing… (20–40 sec)' : 'Write this week with AI'"></button>
+                            <button type="button" @click="copyText(calendarAsText(), 'Week copied')" class="px-3.5 py-1.5 rounded-lg border border-gold-500/50 text-gold-400 font-bold text-xs">Copy all</button>
+                        </div>
                     </div>
-                    <div class="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                    <p x-show="mk.error" class="text-[11px] text-amber-300" x-text="mk.error"></p>
+                    <span class="text-[11px] text-emerald-300" x-text="copiedNote"></span>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         <template x-for="(day, idx) in contentCalendar" :key="idx">
-                            <div class="bg-onyx-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
-                                <span class="text-gold-400 font-bold block" x-text="day.day"></span>
-                                <input type="text" x-model="day.type" :aria-label="day.day + ' post type'" class="w-full bg-onyx-900 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300">
-                                <textarea x-model="day.caption" rows="4" :aria-label="day.day + ' caption'" class="w-full bg-onyx-900 border border-slate-800 rounded px-2 py-1 text-[11px] text-slate-300 leading-snug"></textarea>
+                            <div class="min-w-0 bg-onyx-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2 flex flex-col">
+                                <div class="flex items-center justify-between gap-2"><span class="text-gold-400 font-bold" x-text="day.day"></span>
+                                    <input type="text" x-model="day.type" :aria-label="day.day + ' post type'" class="w-28 bg-onyx-900 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300"></div>
+                                <textarea x-model="day.caption" rows="7" :aria-label="day.day + ' caption'" class="w-full bg-onyx-900 border border-slate-800 rounded px-2 py-1 text-[11px] text-slate-300 leading-snug"></textarea>
+                                <p x-show="day.imageIdea" class="text-[10px] italic text-slate-500" x-text="'📷 ' + day.imageIdea"></p>
+                                <select x-model="day.image" :aria-label="day.day + ' image'" class="w-full bg-onyx-900 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300">
+                                    <template x-for="im in socialImages" :key="im.url"><option :value="im.url" x-text="im.label"></option></template></select>
+                                <div class="flex flex-wrap gap-1.5 mt-auto">
+                                    <button type="button" @click="copyText(day.caption, day.day + ' copied')" class="px-2.5 py-1 rounded-lg border border-slate-600 text-slate-200 font-bold text-[10px]">Copy</button>
+                                    <button type="button" x-show="canPost('facebook')" @click="publishPost(day, 'facebook')" class="px-2.5 py-1 rounded-lg bg-[#1877F2] text-white font-bold text-[10px]">Post to Facebook</button>
+                                    <button type="button" x-show="canPost('instagram')" @click="publishPost(day, 'instagram')" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-pink-500 to-amber-400 text-white font-bold text-[10px]">Post to Instagram</button>
+                                </div>
+                                <p x-show="day.status" class="text-[10px]" :class="day.status.startsWith('✅') ? 'text-emerald-300' : 'text-amber-300'" x-text="day.status"></p>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <!-- TAB: CHANNELS -->
-                <div x-show="marketingTab === 'social_connections'" class="space-y-4">
-                    <h3 class="text-base font-bold text-white">Marketing channels</h3>
-                    <p class="text-xs text-slate-400">These aren't connected to the website — post and run ads from each platform's own dashboard.</p>
-                    <div class="grid sm:grid-cols-2 gap-3">
-                        <template x-for="ch in socialLinks" :key="ch.url">
-                            <a :href="ch.url" target="_blank" rel="noopener noreferrer" class="bg-onyx-950 p-4 rounded-2xl border border-slate-800 hover:border-gold-500/50 flex items-center justify-between gap-3">
-                                <span class="text-sm font-bold text-white" x-text="ch.name"></span><span class="text-xs text-gold-400 font-bold shrink-0">Open ↗</span>
-                            </a>
-                        </template>
+                <!-- TAB: REVIEWS & FOLLOW-UPS -->
+                <div x-show="marketingTab === 'social_connections'" class="space-y-5">
+                    <div class="grid sm:grid-cols-3 gap-3">
+                        <div class="bg-onyx-950 p-4 rounded-2xl border border-slate-800 text-center"><div class="text-xs text-slate-400">Review requests sent</div><div class="text-3xl font-black text-gold-400" x-text="automationStats().reviews"></div></div>
+                        <div class="bg-onyx-950 p-4 rounded-2xl border border-slate-800 text-center"><div class="text-xs text-slate-400">Quote follow-ups sent</div><div class="text-3xl font-black text-skyCyan" x-text="automationStats().followUps"></div></div>
+                        <div class="bg-onyx-950 p-4 rounded-2xl border border-slate-800 text-center"><div class="text-xs text-slate-400">Quote requests still "new"</div><div class="text-3xl font-black text-white" x-text="automationStats().open"></div></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="bg-onyx-950 p-5 rounded-2xl border border-slate-800 space-y-3 text-xs text-slate-300">
+                            <h3 class="text-base font-bold text-white">What runs automatically</h3>
+                            <p><span class="text-gold-400 font-bold">⭐ Google review request</span> — emailed <span x-text="(settingsDraft && settingsDraft.marketing.reviewDelayDays) || 1"></span> day(s) after each job. <span x-show="settingsDraft && !settingsDraft.business.reviewLink" class="text-amber-300 font-bold">Off until you add your Google review link in Settings → Marketing.</span></p>
+                            <p><span class="text-skyCyan font-bold">↩️ Quote follow-up</span> — emailed to quote requests still marked <em>new</em> after <span x-text="(settingsDraft && settingsDraft.marketing.followUpHours) || 48"></span> hours. Change a lead's status in the Leads tab once you've talked to them, and they won't get it.</p>
+                            <p class="text-slate-400">Each person is only emailed once, test bookings are skipped, and everything runs at 10 AM from the n8n workflow <em>Sparkle – Daily Marketing</em>.</p>
+                            <div class="flex flex-wrap gap-2 pt-1">
+                                <button type="button" @click="marketingTab = 'settings'" class="px-3 py-1.5 rounded-lg bg-gold-500 text-black font-bold text-[11px]">Marketing settings</button>
+                                <a x-show="settingsDraft && settingsDraft.business.reviewLink" :href="settingsDraft && settingsDraft.business.reviewLink" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg border border-gold-500/50 text-gold-400 font-bold text-[11px]">Test review link ↗</a>
+                            </div>
+                        </div>
+                        <div class="bg-onyx-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+                            <h3 class="text-base font-bold text-white">Your marketing accounts</h3>
+                            <div class="grid gap-2">
+                                <template x-for="ch in socialLinks" :key="ch.url">
+                                    <a :href="ch.url" target="_blank" rel="noopener noreferrer" class="bg-onyx-900 p-3 rounded-xl border border-slate-800 hover:border-gold-500/50 flex items-center justify-between gap-3">
+                                        <span class="text-xs font-bold text-white" x-text="ch.name"></span><span class="text-[11px] text-gold-400 font-bold shrink-0">Open ↗</span>
+                                    </a>
+                                </template>
+                            </div>
+                            <p class="text-[11px] text-slate-400">Tip: in Google Business Profile, click <strong>Ask for reviews</strong> to copy your review link.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2076,6 +2140,7 @@ const SB_CONFIG = {
     chatWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-chat',   // n8n "Sparkle – Chat Agent"   e.g. https://YOUR-N8N/webhook/sparkle-chat
     leadWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-leads',   // n8n "Sparkle – Lead Intake"  e.g. https://YOUR-N8N/webhook/sparkle-leads
     adminWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-admin',   // n8n "Sparkle – Admin API"    e.g. https://YOUR-N8N/webhook/sparkle-admin
+    marketingWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-marketing',   // n8n "Sparkle – Marketing API" (AI drafts + posting)
     bookingLink:  '',   // optional public booking page (Calendly / Google appointment schedule)
     phoneDisplay: '(661) 481-5317',
     phoneTel: '6614815317',
@@ -2851,7 +2916,8 @@ function sparkleApp() {
         settingsDays: [['mon', 'Monday'], ['tue', 'Tuesday'], ['wed', 'Wednesday'], ['thu', 'Thursday'], ['fri', 'Friday'], ['sat', 'Saturday'], ['sun', 'Sunday']],
         defaultSettings() {
             return {
-                business: { name: 'Sparkle & Bling Mobile Auto Detailing', phone: this.cfg.phoneDisplay, ownerEmail: '', emailSignature: 'Sparkle & Bling Mobile Auto Detailing · ' + this.cfg.phoneDisplay },
+                business: { name: 'Sparkle & Bling Mobile Auto Detailing', phone: this.cfg.phoneDisplay, ownerEmail: '', emailSignature: 'Sparkle & Bling Mobile Auto Detailing · ' + this.cfg.phoneDisplay, website: 'https://www.sparkleblingdetailing.com', reviewLink: '' },
+                marketing: this.defaultMarketing(),
                 hours: this.prices.hours || { mon: ['08:00', '17:00'], tue: ['08:00', '17:00'], wed: ['08:00', '17:00'], thu: ['08:00', '17:00'], fri: ['08:00', '17:00'], sat: ['08:00', '17:00'], sun: null },
                 durationHours: this.prices.durationHours || { express: 2, signature: 4, ceramic_3yr: 8, ceramic_5yr: 8, ceramic_lifetime: 9 },
                 slotStepMinutes: 60, bufferMinutes: 45, minNoticeHours: 18, maxDaysAhead: 45, maxJobsPerDay: 3,
@@ -2859,8 +2925,13 @@ function sparkleApp() {
                 serviceCities: this.cfg.serviceCities, autoBookOutsideArea: false, ceramicVoucher: this.prices.ceramicVoucher
             };
         },
+        defaultMarketing() {
+            return { reviewRequests: true, reviewDelayDays: 1, followUps: true, followUpHours: 48, offer: '$150 paint-prep credit on any ceramic coating package', voice: 'Confident, friendly and premium. Plain language, no hype words like "insane" or "best ever".', facebookPageId: '', instagramUserId: '' };
+        },
         toDraft(st) {
             const d = JSON.parse(JSON.stringify(st));
+            d.business = Object.assign({ website: '', reviewLink: '' }, d.business || {});
+            d.marketing = Object.assign(this.defaultMarketing(), d.marketing || {});
             d.hoursUi = this.settingsDays.map(([k, label]) => ({ key: k, label, open: !!(d.hours && d.hours[k]), from: (d.hours && d.hours[k] || ['08:00'])[0], to: (d.hours && d.hours[k] || [0, '17:00'])[1] }));
             d.citiesText = (d.serviceCities || []).join('\n');
             return d;
@@ -2880,6 +2951,8 @@ function sparkleApp() {
             const n = v => Number(v);
             return {
                 business: d.business, hours,
+                marketing: Object.assign({}, d.marketing, { reviewDelayDays: n(d.marketing.reviewDelayDays), followUpHours: n(d.marketing.followUpHours), reviewRequests: !!d.marketing.reviewRequests, followUps: !!d.marketing.followUps,
+                    facebookPageId: String(d.marketing.facebookPageId || '').trim(), instagramUserId: String(d.marketing.instagramUserId || '').trim() }),
                 durationHours: Object.fromEntries(Object.entries(d.durationHours).map(([k, v]) => [k, n(v)])),
                 slotStepMinutes: n(d.slotStepMinutes), bufferMinutes: n(d.bufferMinutes), minNoticeHours: n(d.minNoticeHours), maxDaysAhead: n(d.maxDaysAhead), maxJobsPerDay: n(d.maxJobsPerDay), ceramicVoucher: n(d.ceramicVoucher),
                 packages: Object.fromEntries(Object.entries(d.packages).map(([k, p]) => [k, { label: p.label, sedan: n(p.sedan), mid_suv: n(p.mid_suv), full_suv: n(p.full_suv) }])),
@@ -2986,7 +3059,7 @@ function sparkleApp() {
         pretty(o) { try { return JSON.stringify(o, null, 2); } catch (e) { return String(o); } },
 
         /* ---------- n8n health check ---------- */
-        health: { booking: null, chat: null, lead: null, admin: null, running: false },
+        health: { booking: null, chat: null, lead: null, admin: null, marketing: null, running: false },
         async runHealthCheck() {
             this.health.running = true;
             const check = async (url, body, headers) => {
@@ -2995,16 +3068,77 @@ function sparkleApp() {
                 if (r.ok) return { state: 'ok', text: `OK · ${r.ms} ms` };
                 return { state: 'fail', text: r.status ? `HTTP ${r.status}` : r.error };
             };
-            [this.health.booking, this.health.chat, this.health.lead, this.health.admin] = await Promise.all([
+            [this.health.booking, this.health.chat, this.health.lead, this.health.admin, this.health.marketing] = await Promise.all([
                 check(this.cfg.bookingApi, { action: 'public_settings' }),
                 check(this.cfg.chatWebhook, { event: 'ping', sessionId: 'healthcheck' }),
                 check(this.cfg.leadWebhook, { event: 'ping' }),
-                this.adminMode === 'live' ? check(this.adminUrl(), { action: 'verify' }, { 'X-Admin-Key': this.adminKey }) : Promise.resolve({ state: 'missing', text: 'Sign in with the admin key to test' })
+                this.adminMode === 'live' ? check(this.adminUrl(), { action: 'verify' }, { 'X-Admin-Key': this.adminKey }) : Promise.resolve({ state: 'missing', text: 'Sign in with the admin key to test' }),
+                this.adminMode === 'live' ? check(this.cfg.marketingWebhook, { action: 'ping' }, { 'X-Admin-Key': this.adminKey }) : Promise.resolve({ state: 'missing', text: 'Sign in with the admin key to test' })
             ]);
             this.health.running = false;
         },
 
-        /* ---------- marketing drafts (template-based, nothing is published) ---------- */
+        /* ---------- marketing: AI drafts + posting via n8n "Sparkle – Marketing API" ---------- */
+        mk: { focus: 'ceramic coating', platform: 'Meta (Facebook & Instagram)', area: '', notes: '', busy: '', error: '', ad: null, weekNote: '' },
+        mkFocusOptions: ['ceramic coating', 'paint correction', 'interior steam detailing', 'new-car protection', 'Express Wash & Wax', 'Signature Full Detail', 'fleet / business accounts'],
+        mkPlatforms: ['Meta (Facebook & Instagram)', 'Google Search Ads', 'Nextdoor', 'TikTok'],
+        socialImages: [
+            { label: 'No image', url: '' },
+            { label: 'Glossy black sports car', url: '/assets/social/hero-gloss.jpg' },
+            { label: 'Water beading close-up', url: '/assets/social/water-beading.jpg' },
+            { label: '50/50 paint correction', url: '/assets/social/paint-correction-5050.jpg' },
+            { label: 'Coated off-road SUV', url: '/assets/social/ceramic-finish.jpg' },
+            { label: 'White SUV, lifetime graphene', url: '/assets/social/lifetime-graphene.jpg' }
+        ],
+        mkLive() { return this.adminMode === 'live' && !!this.cfg.marketingWebhook; },
+        async marketingCall(action, extra) {
+            if (!this.mkLive()) return { ok: false, error: 'preview' };
+            const r = await sbPost(this.cfg.marketingWebhook, Object.assign({ action }, extra || {}), { 'X-Admin-Key': this.adminKey }, 90000);
+            if (r.status === 401 || r.status === 403) { this.logoutAdmin(); this.showAdminAuthModal = true; this.adminAuthError = 'Your admin session expired. Sign in again.'; }
+            return r;
+        },
+        mkErr(r) {
+            if (r.status === 404) return 'The Marketing API workflow isn\'t published in n8n yet.';
+            return (r.data && r.data.error) || r.error || ('HTTP ' + r.status);
+        },
+        async mkDraft(kind) {
+            this.mk.error = '';
+            if (!this.mkLive()) {
+                if (kind === 'ad') { this.aiCampaignForm.packageTarget = /interior/.test(this.mk.focus) ? 'interior_steam' : /correction/.test(this.mk.focus) ? 'paint_correction' : /fleet/.test(this.mk.focus) ? 'b2b_fleet' : 'ceramic_3yr'; this.generateAiAdCopy(); this.mk.ad = null; }
+                this.mk.error = this.adminMode === 'live' ? 'Marketing API URL is missing from SB_CONFIG — showing a template instead.' : 'Preview mode — sign in with your admin key for AI-written drafts. Showing a template.';
+                return;
+            }
+            this.mk.busy = kind;
+            const r = await this.marketingCall('draft', { kind, platform: kind === 'week' ? 'Facebook, Instagram and Google Business Profile' : this.mk.platform, focus: this.mk.focus, area: this.mk.area, notes: this.mk.notes });
+            this.mk.busy = '';
+            if (!(r.ok && r.data && r.data.ok)) { this.mk.error = 'Could not write the draft: ' + this.mkErr(r); return; }
+            if (kind === 'ad') { this.mk.ad = r.data.draft; this.generatedAd = null; }
+            if (kind === 'week') {
+                this.contentCalendar = (r.data.draft.posts || []).slice(0, 7).map(p => ({ day: p.day || '', type: p.type || 'Post', caption: [p.caption, p.hashtags].filter(Boolean).join('\n\n'), imageIdea: p.imageIdea || '', image: '', status: '' }));
+                this.mk.weekNote = 'Written ' + new Date().toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' }) + '. Edit anything before posting.';
+            }
+        },
+        variantAsText(v) { return [v.headline, v.primaryText, v.description, v.cta ? 'Button: ' + v.cta : ''].filter(Boolean).join('\n\n'); },
+        canPost(target) { const m = (this.settingsDraft && this.settingsDraft.marketing) || {}; return this.mkLive() && !!(target === 'instagram' ? m.instagramUserId : m.facebookPageId); },
+        async publishPost(day, target) {
+            if (!day.caption.trim()) return;
+            const image = day.image ? location.origin + day.image : '';
+            if (target === 'instagram' && !image) { day.status = '⚠️ Pick an image first — Instagram needs one.'; return; }
+            day.status = 'Posting…';
+            const r = await this.marketingCall(target === 'instagram' ? 'publish_instagram' : 'publish_facebook', { caption: day.caption, imageUrl: image });
+            day.status = r.ok && r.data && r.data.ok ? '✅ Posted to ' + (target === 'instagram' ? 'Instagram' : 'Facebook') : '⚠️ ' + this.mkErr(r);
+        },
+        automationStats() {
+            const rows = this.adminMode === 'live' ? this.leads : this.localLeads;
+            const t = v => v === true || String(v).toUpperCase() === 'TRUE';
+            return { reviews: rows.filter(r => t(r.reviewRequested)).length, followUps: rows.filter(r => t(r.followUpSent)).length, open: rows.filter(r => (r.type === 'request' || r.type === 'voucher') && r.status === 'new').length };
+        },
+        async openMarketingTab() {
+            if (!this.settingsDraft) await this.loadSettings();
+            if (this.adminMode === 'live' && !this.leads.length) this.loadLeads();
+        },
+
+        /* ---------- marketing: offline fallback drafts (used when the Marketing API isn't connected) ---------- */
         aiCampaignForm: { platform: 'Meta (Facebook & Instagram Ads)', packageTarget: 'ceramic_3yr', targetAudience: 'luxury' },
         generatedAd: null,
         copiedNote: '',
@@ -3025,13 +3159,13 @@ function sparkleApp() {
         },
         adAsText() { const a = this.generatedAd || {}; return `${a.headline}\n\n${a.body}\n\nTargeting: ${a.targeting}\nImage idea: ${a.imagePrompt}`; },
         contentCalendar: [
-            { day: 'Mon', type: 'IG Reel / Short', caption: '50/50 Paint Correction transformation on a Porsche 911 hood in Santa Clarita! 🏎️✨' },
-            { day: 'Tue', type: 'FB Post', caption: 'Why 0-PPM deionized spot-free water matters under California sun ☀️💧' },
-            { day: 'Wed', type: 'GBP Update', caption: '100% Self-contained mobile unit servicing Palmdale & Lancaster driveways today!' },
-            { day: 'Thu', type: 'IG Carousel', caption: '3-Year Ceramic vs Dealership Spray Sealant: What you need to know 🛡️' },
-            { day: 'Fri', type: 'TikTok Video', caption: 'Steam interior sanitization pulling pet hair & stains! 🧼' },
-            { day: 'Sat', type: 'FB Reel', caption: 'Extreme hydrophobic water beading on Lifetime Crown Graphene Armor! 👑' },
-            { day: 'Sun', type: 'GBP Post', caption: 'Weekend slots available! Book your driveway mobile appointment online.' }
+            { day: 'Mon', image: '', status: '', type: 'IG Reel / Short', caption: '50/50 Paint Correction transformation on a Porsche 911 hood in Santa Clarita! 🏎️✨' },
+            { day: 'Tue', image: '', status: '', type: 'FB Post', caption: 'Why 0-PPM deionized spot-free water matters under California sun ☀️💧' },
+            { day: 'Wed', image: '', status: '', type: 'GBP Update', caption: '100% Self-contained mobile unit servicing Palmdale & Lancaster driveways today!' },
+            { day: 'Thu', image: '', status: '', type: 'IG Carousel', caption: '3-Year Ceramic vs Dealership Spray Sealant: What you need to know 🛡️' },
+            { day: 'Fri', image: '', status: '', type: 'TikTok Video', caption: 'Steam interior sanitization pulling pet hair & stains! 🧼' },
+            { day: 'Sat', image: '', status: '', type: 'FB Reel', caption: 'Extreme hydrophobic water beading on Lifetime Crown Graphene Armor! 👑' },
+            { day: 'Sun', image: '', status: '', type: 'GBP Post', caption: 'Weekend slots available! Book your driveway mobile appointment online.' }
         ],
         calendarAsText() { return this.contentCalendar.map(d => `${d.day} — ${d.type}: ${d.caption}`).join('\n'); },
         socialLinks: [
@@ -3058,7 +3192,7 @@ function sparkleApp() {
             this.avatar = em ? em.src : '';
             if (this.adminMode === 'live') this.loadLeads();
             this.loadPublicSettings();
-            this.$watch('marketingTab', t => { if (t === 'settings' && !this.settingsDraft) this.loadSettings(); });
+            this.$watch('marketingTab', t => { if (t === 'settings' && !this.settingsDraft) this.loadSettings(); if (['campaigns', 'content_calendar', 'social_connections'].includes(t)) this.openMarketingTab(); });
         }
     };
 }
