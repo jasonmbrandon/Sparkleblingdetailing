@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /receptionist-widget.html
+Sitemap: https://www.sparkleblingdetailing.com/sitemap.xml
