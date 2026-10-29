@@ -53,6 +53,9 @@
       notes: ['Ceramic quote request (Henderson area)', 'Work location: ' + f.location.value, f.notes.value.trim()].filter(Boolean).join(' | '),
       sessionId: 'lp_' + f.dataset.slug
     };
+    // Ad source (utm_*, gclid, fbclid, landing_page) from assets/tracking.js, for the Leads sheet.
+    var attr = window.sbAttribution ? window.sbAttribution() : {};
+    Object.keys(attr).forEach(function (k) { payload[k] = attr[k]; });
     var btn = f.querySelector('button[type=submit]');
     btn.disabled = true; btn.textContent = 'Sending…';
     fetch(f.dataset.webhook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
@@ -62,6 +65,7 @@
         btn.textContent = 'Request sent ✓';
         setMsg('Got it, ' + payload.name.split(' ')[0] + '! We\'ll text you at ' + payload.phone + ' with your quote and open dates.', true);
         if (window.gtag) window.gtag('event', 'generate_lead', { source: payload.source });
+        if (window.sbTrackLead) window.sbTrackLead(p ? p.price - credit : 1000, payload.serviceLabel);
       })
       .catch(function () {
         btn.disabled = false; btn.textContent = 'Send My Free Quote Request';
