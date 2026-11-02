@@ -10,10 +10,26 @@ const CAL_ID = process.env.SB_CALENDAR_ID || 'sparkleandblingautodetailing@gmail
 const TZ = 'America/Los_Angeles';
 let tokenCache = { token: null, exp: 0 };
 
+// Reads the first complete {...} in the value, so a key pasted twice or with stray text after it still works.
+function firstJsonObject(raw) {
+  const s = String(raw).trim().replace(/^﻿/, '');
+  const start = s.indexOf('{');
+  if (start < 0) throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON does not contain a JSON key');
+  let depth = 0, inStr = false, esc = false;
+  for (let i = start; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) { if (esc) esc = false; else if (c === '\\') esc = true; else if (c === '"') inStr = false; continue; }
+    if (c === '"') inStr = true;
+    else if (c === '{') depth++;
+    else if (c === '}' && --depth === 0) return JSON.parse(s.slice(start, i + 1));
+  }
+  throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON is incomplete; paste the whole key file');
+}
+
 function account() {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!raw) throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON is not set in Vercel');
-  const j = JSON.parse(raw);
+  const j = firstJsonObject(raw);
   return { email: j.client_email, key: String(j.private_key || '').replace(/\\n/g, '\n') };
 }
 const b64url = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
