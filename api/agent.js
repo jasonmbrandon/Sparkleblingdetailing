@@ -11,6 +11,7 @@
 //   SB_N8N_BASE        (optional)  defaults to the live n8n webhook base below
 // Owner mode needs no extra key here: it forwards the admin key the owner signed in with, and n8n checks it.
 
+const GCal = require('./_gcal');
 const N8N = (process.env.SB_N8N_BASE || 'https://n8n-production-86e81.up.railway.app/webhook').replace(/\/$/, '');
 const API = { book: N8N + '/sparkle-book', leads: N8N + '/sparkle-leads', admin: N8N + '/sparkle-admin' };
 const MODEL = process.env.SB_AGENT_MODEL || 'claude-sonnet-5-5';
@@ -176,6 +177,34 @@ const OWNER_TOOLS = [
     }
   },
   {
+    name: 'get_calendar',
+    description: "Read Joe's real Google Calendar between two dates: every event, including jobs he added by hand and days blocked Off. Use this for any question about his calendar, schedule or availability.",
+    input_schema: { type: 'object', properties: { dateFrom: { type: 'string', description: 'YYYY-MM-DD (default today)' }, dateTo: { type: 'string', description: 'YYYY-MM-DD (default today + 7)' } } }
+  },
+  {
+    name: 'add_calendar_event',
+    description: 'Add an event to Joe\'s calendar (a job he booked by phone, an errand, or a day off: use title "Off" and allDay so online booking skips that day). CHANGES THE CALENDAR: only after the owner replied yes to your exact summary.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' }, date: { type: 'string', description: 'YYYY-MM-DD' }, allDay: { type: 'boolean' }, endDate: { type: 'string', description: 'YYYY-MM-DD, last day for multi-day all-day events' },
+        startTime: { type: 'string', description: 'HH:MM 24-hour, Pacific time' }, endTime: { type: 'string', description: 'HH:MM 24-hour' },
+        location: { type: 'string' }, notes: { type: 'string', description: 'Customer name, phone, vehicle, service, price' }
+      },
+      required: ['title', 'date']
+    }
+  },
+  {
+    name: 'cancel_booking',
+    description: 'Cancel a website booking (removes it from the calendar, marks it cancelled, optionally emails the customer). Use the "id" from get_schedule or get_leads. CHANGES THE CALENDAR: only after the owner replied yes to your exact summary.',
+    input_schema: { type: 'object', properties: { bookingId: { type: 'string' }, reason: { type: 'string', description: 'Included in the customer email' }, notifyCustomer: { type: 'boolean', description: 'Default true if they have an email' } }, required: ['bookingId'] }
+  },
+  {
+    name: 'reschedule_booking',
+    description: 'Move a website booking to a new time (updates the calendar, optionally emails the customer). Get valid times first with find_open_times for that booking\'s service and vehicle size. CHANGES THE CALENDAR: only after the owner replied yes to your exact summary.',
+    input_schema: { type: 'object', properties: { bookingId: { type: 'string' }, newStart: { type: 'string', description: 'Exact "start" from find_open_times' }, notifyCustomer: { type: 'boolean' }, allowShortNotice: { type: 'boolean' } }, required: ['bookingId', 'newStart'] }
+  },
+  {
     name: 'get_settings',
     description: 'Get the current business settings: prices, hours, service cities, scheduling rules, current offer.',
     input_schema: { type: 'object', properties: {} }
@@ -183,7 +212,7 @@ const OWNER_TOOLS = [
 ];
 
 function compactLead(l) {
-  const keys = ['timestamp', 'type', 'status', 'source', 'name', 'phone', 'email', 'serviceLabel', 'service', 'vehicle', 'vehicleSize', 'city', 'startDisplay', 'start', 'when', 'estimate', 'notes', 'utm_source', 'utm_campaign', 'landing_page', 'test'];
+  const keys = ['id', 'timestamp', 'type', 'status', 'source', 'name', 'phone', 'email', 'serviceLabel', 'service', 'vehicle', 'vehicleSize', 'city', 'startDisplay', 'start', 'when', 'estimate', 'notes', 'utm_source', 'utm_campaign', 'landing_page', 'test'];
   const o = {};
   keys.forEach(k => { if (l[k] !== undefined && l[k] !== '' && l[k] !== null) o[k] = typeof l[k] === 'string' ? l[k].slice(0, 200) : l[k]; });
   return o;
@@ -246,6 +275,44 @@ async function runTool(name, input, ctx) {
   if (name === 'quick_replies') { ctx.suggestions = (input.options || []).slice(0, 4); return { ok: true }; }
 
   // ----- owner tools -----
+  if (['add_calendar_event', 'cancel_booking', 'reschedule_booking'].includes(name)) {
+    if (!ctx.confirmed) return { ok: false, needsConfirmation: true, note: 'Not done. Show the owner exactly what will change (who, what, when, and whether the customer is emailed) and ask them to reply "yes".' };
+    if ((ctx.writes = (ctx.writes || 0) + 1) > 3) return { ok: false, error: 'Too many changes in one message; ask the owner to confirm the rest separately.' };
+  }
+
+  if (name === 'get_calendar') {
+    const from = input.dateFrom || todayISO(0), to = input.dateTo || todayISO(7);
+    try { const events = await GCal.listEvents(from, to); return { ok: true, from, to, count: events.length, events }; }
+    catch (e) { ctx.log.push('calendar read: ' + e.message); return { ok: false, error: e.message, note: 'Fall back to get_schedule (website bookings only) and tell the owner the calendar connection needs attention.' }; }
+  }
+
+  if (name === 'add_calendar_event') {
+    if (!input.allDay && !(input.startTime && input.endTime)) return { ok: false, error: 'Need startTime and endTime, or allDay: true.' };
+    try { const ev = await GCal.createEvent(input); return { ok: true, created: ev }; }
+    catch (e) { ctx.log.push('calendar write: ' + e.message); return { ok: false, error: e.message }; }
+  }
+
+  if (name === 'cancel_booking' || name === 'reschedule_booking') {
+    if (!ctx.leadRows) {
+      const r = await post(API.admin, { action: 'list_leads', limit: 500 }, { 'X-Admin-Key': ctx.adminKey }, 25000);
+      if (!(r.ok && r.data && Array.isArray(r.data.leads))) return { ok: false, error: 'Could not load bookings.' };
+      ctx.leadRows = r.data.leads;
+    }
+    const l = ctx.leadRows.find(x => String(x.id) === String(input.bookingId));
+    if (!l || l.type !== 'booking') return { ok: false, error: 'No website booking with that id. Use get_schedule to find it.' };
+    if (String(l.status || '').toLowerCase() === 'cancelled') return { ok: false, error: 'That booking is already cancelled.' };
+    const base = { id: l.id, eventId: l.eventId, name: l.name, email: l.email, serviceLabel: l.serviceLabel, address: l.address, city: l.city, notify: input.notifyCustomer === undefined ? !!l.email : !!input.notifyCustomer };
+    const body = name === 'cancel_booking'
+      ? Object.assign({ action: 'cancel_booking', reason: input.reason || '' }, base)
+      : Object.assign({ action: 'reschedule_booking', start: input.newStart, service: l.service, vehicleSize: l.vehicleSize, addons: '', allowShortNotice: !!input.allowShortNotice }, base);
+    const r = await post(API.admin, body, { 'X-Admin-Key': ctx.adminKey }, 30000);
+    if (r.ok && r.data && r.data.ok) {
+      if (name === 'cancel_booking') l.status = 'cancelled'; else { l.start = r.data.start; l.startDisplay = r.data.startDisplay; }
+      return { ok: true, booking: { name: l.name, service: l.serviceLabel, status: l.status, newTime: r.data.startDisplay || '' }, customerEmailed: base.notify };
+    }
+    return { ok: false, error: (r.data && r.data.message) || ('Failed (' + (r.status || r.error) + ')') };
+  }
+
   if (name === 'get_settings') {
     const r = await post(API.admin, { action: 'get_settings' }, { 'X-Admin-Key': ctx.adminKey }, 20000);
     return r.ok && r.data && r.data.settings ? { ok: true, settings: r.data.settings } : { ok: true, settings, note: 'Admin API unavailable; showing public settings.' };
@@ -317,7 +384,10 @@ Answer the owner's questions about the business using your tools: leads and quot
 - Be short and practical: lead with the answer, then up to 5 bullet points. Use names, phone numbers and times so the owner can act (e.g. who to call back first).
 - Point out useful patterns: unanswered requests older than a day, which service or city is asked about most, which ad source (utm_source) brings leads.
 - Test rows are excluded unless asked.
-- You can't cancel, reschedule or change settings from here; tell the owner to use the Bookings or Settings tab for that.
+- For "my calendar", "what's booked", "am I free" questions use get_calendar (Joe's real calendar). Use get_schedule/get_leads for customer details of website bookings.
+- You CAN add events (add_calendar_event), cancel bookings (cancel_booking) and reschedule bookings (reschedule_booking). Before any of these, show a one-line summary of exactly what will change (who, what, when, customer emailed or not) and ask the owner to reply "yes". Only call the tool after they say yes. Never invent times: for reschedules, offer times from find_open_times.
+- To block a day so online booking skips it, add an all-day event titled "Off".
+- You can't change prices or settings; that's the Settings tab.
 Public settings snapshot: ${JSON.stringify({ packages: settings.packages, serviceCities: settings.serviceCities, hours: settings.hours }).slice(0, 2500)}`;
 }
 
@@ -351,6 +421,7 @@ async function runAgent({ mode, message, history, context, sessionId, testMode, 
   const ctx = { mode, settings, sessionId, testMode, adminKey, attribution, log: [], booking: null, openBooking: null, suggestions: [] };
   const system = mode === 'owner' ? ownerPrompt(settings) : customerPrompt(settings, context);
   const tools = mode === 'owner' ? OWNER_TOOLS : CUSTOMER_TOOLS;
+  ctx.confirmed = mode === 'owner' && /^\s*(yes|yeah|yep|yup|y|confirm(ed)?|do it|go ahead|please do|sure|ok(ay)?|correct|that'?s right|sounds good|book it|cancel it|move it|add it)\b/i.test(message);
   const messages = toHistory(history);
   if (messages.length && messages[messages.length - 1].role === 'user') messages[messages.length - 1].content += '\n' + message;
   else messages.push({ role: 'user', content: message });

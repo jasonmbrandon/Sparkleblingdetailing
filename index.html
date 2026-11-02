@@ -1801,7 +1801,7 @@
                 <div x-show="marketingTab === 'assistant'" class="space-y-4">
                     <div class="bg-onyx-950 rounded-2xl border border-slate-800 p-5">
                         <h3 class="text-white font-extrabold text-lg">Ask your business assistant</h3>
-                        <p class="text-xs text-slate-400 mt-1">Ask about leads, quote requests, upcoming jobs, open times, prices and which ads bring customers. It reads your live Leads sheet and calendar; cancel or reschedule from the Bookings tab.</p>
+                        <p class="text-xs text-slate-400 mt-1">Ask about your calendar, leads, open times and which ads bring customers. It can also add jobs or days off to your calendar and cancel or reschedule bookings. It always asks you to reply "yes" before changing anything.</p>
                         <div x-show="adminMode !== 'live'" class="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs">Sign in with the admin key to use the assistant.</div>
                         <div id="ownerLog" class="mt-4 h-80 overflow-y-auto space-y-3 pr-1">
                             <template x-for="(m, i) in ownerChat.messages" :key="i">
@@ -1814,7 +1814,7 @@
                             <div x-show="ownerChat.busy" class="text-xs text-slate-400">Checking your data…</div>
                         </div>
                         <div class="mt-3 flex flex-wrap gap-2">
-                            <template x-for="q in ['What do I have booked this week?', 'Which leads should I call back first?', 'How many leads came in the last 30 days, and from where?', 'When is my next open slot for a ceramic coating on an SUV?']" :key="q">
+                            <template x-for="q in ['What\'s on my calendar this week?', 'Which leads should I call back first?', 'Block off this Sunday', 'When is my next open slot for a ceramic coating on an SUV?']" :key="q">
                                 <button type="button" @click="askOwner(q)" :disabled="ownerChat.busy || adminMode !== 'live'" class="px-3 py-1.5 rounded-full border border-slate-700 text-[11px] text-slate-300 hover:border-gold-500/50 disabled:opacity-40" x-text="q"></button>
                             </template>
                         </div>
