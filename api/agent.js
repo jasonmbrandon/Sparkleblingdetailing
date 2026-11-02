@@ -17,34 +17,8 @@ const MODEL = process.env.SB_AGENT_MODEL || 'claude-sonnet-5-5';
 const TZ = 'America/Los_Angeles';
 const ALLOWED_ORIGINS = [/^https:\/\/(www\.)?sparkleblingdetailing\.com$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/];
 
-// Fallback business facts, used only if the Booking API's public_settings can't be reached.
-const DEFAULT_SETTINGS = {
-  business: { name: 'Sparkle & Bling Mobile Auto Detailing', phone: '(661) 481-5317' },
-  packages: {
-    express: { label: 'Express Wash & Wax', sedan: 135, mid_suv: 165, full_suv: 185 },
-    signature: { label: 'Signature Full Detail', sedan: 265, mid_suv: 305, full_suv: 345 },
-    ceramic_3yr: { label: '3-Year Ceramic Shield', sedan: 1050, mid_suv: 1260, full_suv: 1470 },
-    ceramic_5yr: { label: '5-Year Graphene Armor', sedan: 1575, mid_suv: 1785, full_suv: 1995 },
-    ceramic_lifetime: { label: 'Lifetime Crown Graphene', sedan: 2625, mid_suv: 3045, full_suv: 3465 }
-  },
-  addons: {
-    headlight: { label: 'Headlight Restoration', price: 95 }, engine: { label: 'Engine Bay Detail', price: 125 },
-    petHair: { label: 'Pet Hair Extraction', price: 85 }, glass: { label: 'Windshield Ceramic Shield', price: 75 },
-    wheelCoating: { label: 'Wheel Barrel Ceramic Barrier', price: 150 }
-  },
-  sizeLabels: { sedan: 'Sedan / Coupe', mid_suv: 'Mid-size SUV / Pickup', full_suv: 'Full-size SUV / Van' },
-  ceramicVoucher: 150,
-  serviceCities: ['Lancaster', 'Palmdale', 'Quartz Hill', 'Santa Clarita', 'Valencia', 'Stevenson Ranch', 'Saugus', 'Newhall', 'Canyon Country', 'Rosamond', 'Acton']
-};
-
-const SITE_FACTS = `
-- Fully mobile: we come to the customer's home or work with our own deionized spot-free water and power. No hookups needed.
-- Ceramic and graphene coatings are 9H and include paint correction (multi-stage machine polish) before coating. Coating warranties are registered to the vehicle's VIN through CARFAX.
-- Express Wash & Wax: maintenance hand wash and refresh. Signature Full Detail: full interior (steam, hot-water extraction of seats/carpets/headliner) plus exterior.
-- Licensed, $1M insured, 4.9-star rating with 180+ local reviews, BBB A+.
-- New ceramic clients get a ceramic prep credit (amount in settings: ceramicVoucher).
-- Expanding to Henderson / Las Vegas (Henderson, Green Valley, Anthem, Inspirada, Lake Las Vegas, Seven Hills, Southern Highlands) for ceramic coating; those requests can always be taken as a quote request even if online booking there isn't open yet.
-- Exact final price is confirmed after the paint is seen; very dirty interiors, heavy pet hair or heavy oxidation may cost more.`;
+const { DEFAULT_SETTINGS, SITE_FACTS } = require('./_defaults');
+const Deposit = require('./_deposit');
 
 // ---------- small helpers ----------
 async function post(url, body, headers, ms) {
@@ -115,6 +89,19 @@ const CUSTOMER_TOOLS = [
         vehicle: { type: 'string', description: 'Year make model' }, notes: { type: 'string' }
       },
       required: ['service', 'vehicleSize', 'start', 'name', 'phone', 'address', 'city', 'vehicle']
+    }
+  },
+  {
+    name: 'start_deposit_checkout',
+    description: 'For CERAMIC coating bookings only (they need a deposit to confirm). Creates a secure Stripe payment link for the deposit; the appointment is booked on the calendar automatically once they pay. Call only after the customer picked a time from find_open_times AND confirmed the summary including the deposit amount.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        service: { type: 'string', enum: SERVICE_ENUM }, vehicleSize: { type: 'string', enum: SIZE_ENUM }, addons: { type: 'array', items: { type: 'string' } },
+        start: { type: 'string', description: 'Exact "start" of the chosen slot' }, startLabel: { type: 'string', description: 'The slot label, e.g. Saturday, Nov 7 at 9:00 AM' },
+        name: { type: 'string' }, phone: { type: 'string' }, email: { type: 'string' }, address: { type: 'string' }, city: { type: 'string' }, vehicle: { type: 'string' }, notes: { type: 'string' }
+      },
+      required: ['service', 'vehicleSize', 'start', 'startLabel', 'name', 'phone', 'address', 'city', 'vehicle']
     }
   },
   {
@@ -208,7 +195,16 @@ async function runTool(name, input, ctx) {
     return { ok: true, slots, note: slots.length ? 'Offer 2-4 of these, spread across days. Use the label text when talking to the customer.' : 'No openings in that range; try a later range.' };
   }
 
+  if (name === 'start_deposit_checkout') {
+    const out = await Deposit.startCheckout(Object.assign({}, input, { sessionId: ctx.sessionId, testMode: !!ctx.testMode, source: 'Website AI agent' }), ctx.origin, DEFAULT_SETTINGS).catch(e => ({ ok: false, error: String(e.message || e) }));
+    if (out.ok) { ctx.payUrl = out.url; ctx.payAmount = out.deposit; return { ok: true, deposit: out.deposit, total: out.total, note: 'A "Pay deposit" button now shows under your message. Tell them the time is confirmed and booked the moment the deposit goes through, and the rest is paid when the job is done.' }; }
+    if (out.error === 'SLOT_TAKEN') return { ok: false, reason: 'That time was just taken.', alternatives: out.alternatives };
+    ctx.log.push('deposit failed ' + (out.error || '') + ' ' + (out.message || ''));
+    return { ok: false, reason: 'Online deposit is unavailable right now. Take it as a request with save_request (include the chosen time) and say the owner will text to confirm.' };
+  }
+
   if (name === 'book_appointment') {
+    if (Deposit.depositRequired(input.service)) return { ok: false, reason: 'Ceramic bookings need a deposit. Use start_deposit_checkout instead.' };
     const body = {
       action: 'book', service: input.service, vehicleSize: input.vehicleSize, addons: (input.addons || []).join(','), start: input.start,
       name: input.name, phone: input.phone, email: input.email || '', address: input.address, city: input.city, vehicle: input.vehicle,
@@ -302,6 +298,7 @@ HOW TO BOOK:
 2. Collect: name, mobile number, street address + city, year/make/model, email (optional, for confirmation).
 3. Check the city is in serviceCities. If not, don't book; offer save_request so the owner can confirm (Henderson/Las Vegas ceramic quotes always go to save_request).
 4. Read back a one-line summary (service, vehicle, day/time, address, total) and ask "Shall I lock it in?". Only after a clear yes, call book_appointment with the exact "start".
+   CERAMIC COATINGS need a ${Deposit.PERCENT}% deposit to confirm (e.g. ${Deposit.PERCENT}% of $1,050 = $${Math.round(1050 * Deposit.PERCENT / 100)}). Say the deposit amount in the summary, and after a yes call start_deposit_checkout (never book_appointment). Deposit policy: ${Deposit.POLICY} Washes and full details need no deposit.
 5. If booking succeeds, confirm warmly in one or two sentences (the page shows the booking card). If a tool fails, offer show_booking_button or save_request; never claim a booking you didn't make.
 Use quick_replies when there are obvious short answers (sizes, times, yes/no).
 
@@ -346,9 +343,9 @@ function toHistory(history) {
   return out;
 }
 
-async function runAgent({ mode, message, history, context, sessionId, testMode, adminKey, attribution }) {
+async function runAgent({ mode, message, history, context, sessionId, testMode, adminKey, attribution, origin }) {
   const settings = await getSettings();
-  const ctx = { mode, settings, sessionId, testMode, adminKey, attribution, log: [], booking: null, openBooking: null, suggestions: [] };
+  const ctx = { mode, settings, sessionId, testMode, adminKey, attribution, origin, log: [], booking: null, openBooking: null, suggestions: [], payUrl: null, payAmount: null };
   const system = mode === 'owner' ? ownerPrompt(settings) : customerPrompt(settings, context);
   const tools = mode === 'owner' ? OWNER_TOOLS : CUSTOMER_TOOLS;
   const messages = toHistory(history);
@@ -371,7 +368,7 @@ async function runAgent({ mode, message, history, context, sessionId, testMode, 
     }
     messages.push({ role: 'user', content: results });
   }
-  return { reply: text || 'Sorry, I didn\'t catch that. Could you rephrase?', booking: ctx.booking, openBooking: ctx.openBooking, suggestions: ctx.suggestions, debug: ctx.log };
+  return { reply: text || 'Sorry, I didn\'t catch that. Could you rephrase?', booking: ctx.booking, openBooking: ctx.openBooking, suggestions: ctx.suggestions, payUrl: ctx.payUrl, payAmount: ctx.payAmount, debug: ctx.log };
 }
 
 // ---------- HTTP handler ----------
@@ -406,7 +403,7 @@ module.exports = async (req, res) => {
   try {
     const out = await runAgent({
       mode, message, history: body.history, context: body.context, sessionId: String(body.sessionId || '').slice(0, 80),
-      testMode: !!body.testMode, adminKey, attribution: body.attribution && typeof body.attribution === 'object' ? body.attribution : null
+      testMode: !!body.testMode, adminKey, origin: ALLOWED_ORIGINS.some(re => re.test(origin)) ? origin : 'https://sparkleblingdetailing.com', attribution: body.attribution && typeof body.attribution === 'object' ? body.attribution : null
     });
     if (out.debug.length) console.warn('agent tool issues:', out.debug.join('; '));
     delete out.debug;

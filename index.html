@@ -1107,7 +1107,11 @@
                         <div class="p-3 flex justify-between gap-3"><span class="text-slate-400">Contact</span><span class="text-white text-right" x-text="bk.name + ' · ' + bk.phone"></span></div>
                         <div class="p-3 flex justify-between gap-3 items-baseline"><span class="text-slate-400">Estimate</span><span class="text-right"><span class="text-xl font-black gold-gradient-text" x-text="money((bkQuote() || {}).total)"></span><span x-show="(bkQuote() || {}).voucher" class="block text-[11px] text-emerald-300" x-text="money((bkQuote() || {}).total - (bkQuote() || {}).voucher) + ' with the $' + (bkQuote() || {}).voucher + ' ceramic prep credit'"></span></span></div>
                     </div>
-                    <p class="text-[11px] text-slate-500">Paid when the job is done. We bring our own water and power.</p>
+                    <div x-show="bkDeposit()" class="p-3 rounded-xl bg-gold-500/10 border border-gold-500/40 text-xs text-gold-200 space-y-1">
+                        <div class="flex justify-between gap-3 font-bold"><span x-text="cfg.depositPercent + '% deposit due now to confirm'"></span><span x-text="money(bkDeposit())"></span></div>
+                        <p class="text-[11px] text-slate-300">Paid securely with Stripe. Non-refundable but can be moved to a new date, and it comes off your final bill.</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500" x-text="bkDeposit() ? 'The rest is paid when the job is done. We bring our own water and power.' : 'Paid when the job is done. We bring our own water and power.'"></p>
                 </div>
 
                 <!-- 6: done -->
@@ -1120,6 +1124,38 @@
                             <p class="text-xs text-slate-300" x-text="bk.result.serviceLabel + ' · ' + money(bk.result.price) + ' · ' + bk.result.address"></p>
                             <p x-show="bk.email" class="text-xs text-slate-400" x-text="'A confirmation is on its way to ' + bk.email + '. We\'ll remind you the day before.'"></p>
                             <a :href="bk.result.addToCalendarUrl" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-extrabold text-gold-400 hover:text-white"><i class="fa-solid fa-calendar-plus"></i> Add to my calendar &rarr;</a>
+                        </div>
+                    </template>
+                    <template x-if="bk.result && bk.result.status === 'checking'">
+                        <div class="space-y-2">
+                            <h4 class="text-2xl font-black text-white">Payment received</h4>
+                            <p class="text-xs text-slate-300">Locking in your appointment… this takes a few seconds.</p>
+                        </div>
+                    </template>
+                    <template x-if="bk.result && bk.result.status === 'deposit_confirmed'">
+                        <div class="space-y-3">
+                            <h4 class="text-2xl font-black text-white">You're booked!</h4>
+                            <p class="text-sm text-gold-400 font-bold" x-text="bk.result.displayTime"></p>
+                            <p class="text-xs text-slate-300" x-text="money(bk.result.deposit) + ' deposit paid' + (bk.result.total ? ' · ' + money(bk.result.total - bk.result.deposit) + ' due when the job is done' : '')"></p>
+                            <p class="text-xs text-slate-400" x-text="bk.result.email ? 'A confirmation is on its way to ' + bk.result.email + '.' : 'We\'ll text you a reminder the day before.'"></p>
+                        </div>
+                    </template>
+                    <template x-if="bk.result && bk.result.status === 'needs_reschedule'">
+                        <div class="space-y-2">
+                            <h4 class="text-2xl font-black text-white">Deposit received</h4>
+                            <p class="text-xs text-slate-300">Your payment went through, but that time was taken while you were checking out. Joe will text you shortly to pick a new time. Your deposit carries over.</p>
+                        </div>
+                    </template>
+                    <template x-if="bk.result && bk.result.status === 'deposit_pending'">
+                        <div class="space-y-2">
+                            <h4 class="text-2xl font-black text-white">Deposit received</h4>
+                            <p class="text-xs text-slate-300">We're confirming your time now. You'll get a confirmation shortly; if not, call or text us.</p>
+                        </div>
+                    </template>
+                    <template x-if="bk.result && bk.result.status === 'deposit_cancelled'">
+                        <div class="space-y-2">
+                            <h4 class="text-2xl font-black text-white">Not booked yet</h4>
+                            <p class="text-xs text-slate-300">The deposit wasn't completed, so your time wasn't reserved. Pick a time again whenever you're ready.</p>
                         </div>
                     </template>
                     <template x-if="bk.result && bk.result.status === 'requested'">
@@ -1138,7 +1174,7 @@
             <div class="p-5 sm:p-6 pt-0 flex items-center gap-3">
                 <button x-show="bk.step > 1 && bk.step < 6" type="button" @click="bkBack()" class="px-4 py-3 rounded-xl border border-slate-700 text-slate-300 text-xs font-bold hover:border-slate-500">&larr; Back</button>
                 <button x-show="bk.step >= 2 && bk.step <= 4" type="button" @click="bkNext()" class="flex-1 py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider hover:bg-gold-400">Continue</button>
-                <button x-show="bk.step === 5" type="button" @click="bkSubmit()" :disabled="bk.submitting" class="flex-1 py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider hover:bg-gold-400 disabled:opacity-60" x-text="bk.submitting ? 'Booking…' : (bk.mode === 'live' ? 'Confirm booking' : 'Send request')"></button>
+                <button x-show="bk.step === 5" type="button" @click="bkSubmit()" :disabled="bk.submitting" class="flex-1 py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider hover:bg-gold-400 disabled:opacity-60" x-text="bk.submitting ? (bkDeposit() && bk.mode === 'live' ? 'Opening secure checkout…' : 'Booking…') : (bk.mode === 'live' ? (bkDeposit() ? 'Pay ' + money(bkDeposit()) + ' deposit & confirm' : 'Confirm booking') : 'Send request')"></button>
                 <button x-show="bk.step === 6" type="button" @click="bkClose()" class="flex-1 py-3 rounded-xl bg-gold-500 text-black font-extrabold text-sm uppercase tracking-wider">Done</button>
             </div>
         </div>
@@ -2113,6 +2149,11 @@
                             </a>
                         </div>
 
+                        <!-- Deposit checkout link from the agent (ceramic bookings) -->
+                        <div x-show="msg.pay" class="ml-9">
+                            <a :href="msg.pay" class="gold-btn text-onyx-900 text-xs font-extrabold px-4 py-2 rounded-xl inline-flex items-center gap-2"><i class="fa-solid fa-lock"></i> <span x-text="'Pay ' + (msg.payAmount ? money(msg.payAmount) + ' ' : '') + 'deposit to confirm'"></span></a>
+                        </div>
+
                         <!-- Hand-off to the booking widget -->
                         <div x-show="msg.cta" class="ml-9">
                             <button type="button" @click="openFromChat(msg.cta)" class="gold-btn text-onyx-900 text-xs font-extrabold px-4 py-2 rounded-xl inline-flex items-center gap-2"><i class="fa-solid fa-calendar-check"></i> Pick a time</button>
@@ -2171,6 +2212,8 @@ const SB_CONFIG = {
     leadWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-leads',   // n8n "Sparkle – Lead Intake"  e.g. https://YOUR-N8N/webhook/sparkle-leads
     adminWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-admin',   // n8n "Sparkle – Admin API"    e.g. https://YOUR-N8N/webhook/sparkle-admin
     marketingWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-marketing',   // n8n "Sparkle – Marketing API" (AI drafts + posting)
+    depositApi:   '/api/deposit',   // Stripe deposit for ceramic bookings (api/deposit.js)
+    depositPercent: 30,
     bookingLink:  '',   // optional public booking page (Calendly / Google appointment schedule)
     phoneDisplay: '(661) 481-5317',
     phoneTel: '6614815317',
@@ -2529,7 +2572,7 @@ function sparkleApp() {
             if (!booking && (data.booked || data.appointment)) {   // legacy shape
                 booking = { status: 'confirmed', displayTime: (data.appointment && data.appointment.dateTime) || data.dateTime || '', calendarUrl: (data.appointment && data.appointment.calendarUrl) || data.calendarUrl || '' };
             }
-            return { text: text || 'Sorry — I didn\'t catch that. Could you rephrase?', booking: booking && booking.status === 'confirmed' ? booking : null, chips: Array.isArray(data.suggestions) ? data.suggestions.slice(0, 4) : [], cta: data.openBooking || null };
+            return { text: text || 'Sorry — I didn\'t catch that. Could you rephrase?', booking: booking && booking.status === 'confirmed' ? booking : null, chips: Array.isArray(data.suggestions) ? data.suggestions.slice(0, 4) : [], cta: data.openBooking || null, pay: data.payUrl || null, payAmount: data.payAmount || null };
         },
         async submitMsg() {
             const query = this.userInput.trim();
@@ -2544,7 +2587,7 @@ function sparkleApp() {
                 this.isAgentThinking = false;
                 if (r.ok && r.data) {
                     const a = this.readAgentReply(r.data);
-                    this.chatMessages.push({ role: 'ai', text: a.text, booking: a.booking, chips: a.chips, cta: a.cta });
+                    this.chatMessages.push({ role: 'ai', text: a.text, booking: a.booking, chips: a.chips, cta: a.cta, pay: a.pay, payAmount: a.payAmount });
                     this.scrollChat();
                     return;
                 }
@@ -2658,11 +2701,51 @@ function sparkleApp() {
             if (r.ok && r.data && r.data.ok) { b.slots = r.data.slots || []; if (!b.slots.length) b.slotsError = 'No openings that day — try another day.'; }
             else { b.mode = 'request'; b.slotsError = ''; }   // live availability down → switch to request mode
         },
+        bkDeposit() {
+            const q = this.bkQuote();
+            if (!q || !this.cfg.depositApi || !/^ceramic/.test(this.bk.service)) return 0;
+            return Math.round(q.total * this.cfg.depositPercent / 100);
+        },
+        async bkStartDeposit() {
+            const b = this.bk;
+            const r = await sbPost(this.cfg.depositApi, { action: 'start', service: b.service, vehicleSize: b.vehicleSize, addons: b.addons, start: b.start, startLabel: b.startLabel,
+                name: b.name.trim(), phone: b.phone, email: b.email.trim(), address: b.address.trim(), city: b.city, vehicle: b.vehicle.trim(), notes: b.notes.trim(),
+                sessionId: this.chatSessionId, testMode: this.adminMode !== 'off' }, null, 30000);
+            if (r.ok && r.data && r.data.url) { window.location.href = r.data.url; return true; }
+            b.submitting = false;
+            if (r.data && r.data.error === 'SLOT_TAKEN') { b.slots = r.data.alternatives || []; b.step = 3; b.start = ''; b.error = 'That time was just taken. Pick another time below.'; return true; }
+            if (r.data && r.data.error === 'MISSING_INFO') { b.error = r.data.message; b.step = 4; return true; }
+            console.warn('Deposit checkout unavailable:', r.status, r.data);
+            return false;   // fall back to a request the owner confirms by text
+        },
+        async bkDepositReturn() {
+            const q = new URLSearchParams(location.search);
+            const state = q.get('deposit'), sid = q.get('session_id');
+            if (!state) return;
+            history.replaceState(null, '', location.pathname + location.hash);
+            this.openWidget({});
+            this.bk.step = 6;
+            if (state !== 'success' || !sid) { this.bk.result = { status: 'deposit_cancelled' }; return; }
+            this.bk.result = { status: 'checking' };
+            for (let i = 0; i < 70; i++) {
+                const r = await sbPost(this.cfg.depositApi, { action: 'status', sessionId: sid }, null, 30000);
+                const d = r.data || {};
+                if (d.status === 'confirmed') { this.bk.result = Object.assign({}, d, { status: 'deposit_confirmed' }); return; }
+                if (d.status === 'needs_reschedule') { this.bk.result = d; return; }
+                if (d.status === 'unpaid' || d.status === 'expired') { this.bk.result = { status: 'deposit_cancelled' }; return; }
+                await new Promise(res => setTimeout(res, 3000));
+            }
+            this.bk.result = { status: 'deposit_pending' };
+        },
         bkPickSlot(s) { this.bk.start = s.start; this.bk.startLabel = s.label; },
         slotTime(s) { return String(s.label || '').split(' at ')[1] || s.label; },
         async bkSubmit() {
             const b = this.bk; b.error = ''; b.submitting = true;
             const q = this.bkQuote();
+            if (b.mode === 'live' && this.bkDeposit()) {
+                if (await this.bkStartDeposit()) return;
+                b.mode = 'request'; b.when = b.startLabel; b.submitting = true;
+            }
             if (b.mode === 'live') {
                 const r = await sbPost(this.cfg.bookingApi, { action: 'book', service: b.service, vehicleSize: b.vehicleSize, addons: b.addons.join(','), start: b.start,
                     name: b.name.trim(), phone: b.phone, email: b.email.trim(), address: b.address.trim(), city: b.city, vehicle: b.vehicle.trim(), notes: b.notes.trim(),
@@ -3238,6 +3321,7 @@ function sparkleApp() {
             this.avatar = em ? em.src : '';
             if (this.adminMode === 'live') this.loadLeads();
             this.loadPublicSettings();
+            this.bkDepositReturn();
             this.$watch('marketingTab', t => { if (t === 'settings' && !this.settingsDraft) this.loadSettings(); if (['campaigns', 'content_calendar', 'social_connections'].includes(t)) this.openMarketingTab(); });
         }
     };
