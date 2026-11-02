@@ -6,14 +6,14 @@
 //
 // Vercel environment variables:
 //   STRIPE_SECRET_KEY      (required) Joe's Stripe key: sk_test_... on Preview, sk_live_... or rk_live_... on Production
-//   SB_DEPOSIT_PERCENT     (optional) default 20
+//   SB_DEPOSIT_PERCENT     (optional) default 30
 //   SB_DEPOSIT_SERVICES    (optional) comma list of service keys, default: every ceramic_* service
 //   SB_N8N_BASE            (optional) same as api/agent.js
 
 const N8N = (process.env.SB_N8N_BASE || 'https://n8n-production-86e81.up.railway.app/webhook').replace(/\/$/, '');
 const BOOK_API = N8N + '/sparkle-book';
 const LEAD_API = N8N + '/sparkle-leads';
-const PERCENT = Number(process.env.SB_DEPOSIT_PERCENT || 20);
+const PERCENT = Number(process.env.SB_DEPOSIT_PERCENT || 30);
 const POLICY = 'Your deposit is non-refundable but can be moved to a new date, and it is applied to your final bill.';
 
 async function post(url, body, headers, ms) {
