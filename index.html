@@ -1478,6 +1478,7 @@
                 <!-- Tabs -->
                 <div class="flex flex-wrap items-center gap-2 mb-8 border-b border-slate-800 pb-4" role="tablist">
                     <template x-for="t in [
+                        { id: 'assistant', label: '🤖 Assistant' },
                         { id: 'bookings', label: '📅 Bookings' },
                         { id: 'crm_leads', label: '📊 Leads' },
                         { id: 'settings', label: '⚙️ Settings' },
@@ -1783,6 +1784,35 @@
                                 <tr x-show="!crmRows().length"><td colspan="6" class="p-8 text-center text-slate-500" x-text="adminMode === 'live' ? (leadsLoading ? 'Loading…' : 'No leads yet.') : 'No test leads yet — try the voucher funnel or the Test Lab.'"></td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- TAB: OWNER ASSISTANT (api/agent.js, owner mode) -->
+                <div x-show="marketingTab === 'assistant'" class="space-y-4">
+                    <div class="bg-onyx-950 rounded-2xl border border-slate-800 p-5">
+                        <h3 class="text-white font-extrabold text-lg">Ask your business assistant</h3>
+                        <p class="text-xs text-slate-400 mt-1">Ask about leads, quote requests, upcoming jobs, open times, prices and which ads bring customers. It reads your live Leads sheet and calendar; cancel or reschedule from the Bookings tab.</p>
+                        <div x-show="adminMode !== 'live'" class="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs">Sign in with the admin key to use the assistant.</div>
+                        <div id="ownerLog" class="mt-4 h-80 overflow-y-auto space-y-3 pr-1">
+                            <template x-for="(m, i) in ownerChat.messages" :key="i">
+                                <div :class="m.role === 'user' ? 'justify-end' : 'justify-start'" class="flex">
+                                    <div :class="m.role === 'user' ? 'bg-gold-500 text-onyx-950 font-medium' : (m.role === 'sys' ? 'bg-red-500/10 border border-red-500/30 text-red-200' : 'bg-onyx-900 border border-slate-800 text-slate-200')" class="max-w-[90%] p-3 rounded-2xl text-xs leading-relaxed">
+                                        <p class="whitespace-pre-line" x-html="fmt(m.text)"></p>
+                                    </div>
+                                </div>
+                            </template>
+                            <div x-show="ownerChat.busy" class="text-xs text-slate-400">Checking your data…</div>
+                        </div>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <template x-for="q in ['What do I have booked this week?', 'Which leads should I call back first?', 'How many leads came in the last 30 days, and from where?', 'When is my next open slot for a ceramic coating on an SUV?']" :key="q">
+                                <button type="button" @click="askOwner(q)" :disabled="ownerChat.busy || adminMode !== 'live'" class="px-3 py-1.5 rounded-full border border-slate-700 text-[11px] text-slate-300 hover:border-gold-500/50 disabled:opacity-40" x-text="q"></button>
+                            </template>
+                        </div>
+                        <form @submit.prevent="askOwner()" class="mt-3 flex gap-2">
+                            <input type="text" x-model="ownerChat.input" placeholder="Ask anything about the business…" aria-label="Ask the assistant"
+                                   class="flex-1 bg-onyx-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:border-gold-500 focus:outline-none">
+                            <button type="submit" :disabled="ownerChat.busy || adminMode !== 'live'" class="px-4 py-2.5 rounded-xl bg-gold-500 text-black font-bold text-xs uppercase disabled:opacity-40">Ask</button>
+                        </form>
                     </div>
                 </div>
 
@@ -2137,7 +2167,7 @@
    ===================================================================== */
 const SB_CONFIG = {
     bookingApi:   'https://n8n-production-86e81.up.railway.app/webhook/sparkle-book',   // n8n "Sparkle – Booking API"  e.g. https://YOUR-N8N/webhook/sparkle-book
-    chatWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-chat',   // n8n "Sparkle – Chat Agent"   e.g. https://YOUR-N8N/webhook/sparkle-chat
+    chatWebhook:  '/api/agent',   // AI agent on Vercel (api/agent.js). Old n8n chat: https://n8n-production-86e81.up.railway.app/webhook/sparkle-chat   e.g. https://YOUR-N8N/webhook/sparkle-chat
     leadWebhook:  'https://n8n-production-86e81.up.railway.app/webhook/sparkle-leads',   // n8n "Sparkle – Lead Intake"  e.g. https://YOUR-N8N/webhook/sparkle-leads
     adminWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-admin',   // n8n "Sparkle – Admin API"    e.g. https://YOUR-N8N/webhook/sparkle-admin
     marketingWebhook: 'https://n8n-production-86e81.up.railway.app/webhook/sparkle-marketing',   // n8n "Sparkle – Marketing API" (AI drafts + posting)
@@ -2510,7 +2540,7 @@ function sparkleApp() {
 
             if (this.cfg.chatWebhook) {
                 this.isAgentThinking = true;
-                const r = await sbPost(this.cfg.chatWebhook, { sessionId: this.chatSessionId, message: query, testMode: false, context: this.chatContext(), timestamp: new Date().toISOString() });
+                const r = await sbPost(this.cfg.chatWebhook, { sessionId: this.chatSessionId, message: query, history: this.chatMessages.slice(0, -1).slice(-20).map(m => ({ role: m.role, text: m.text })), attribution: window.sbAttribution ? window.sbAttribution() : null, testMode: false, context: this.chatContext(), timestamp: new Date().toISOString() });
                 this.isAgentThinking = false;
                 if (r.ok && r.data) {
                     const a = this.readAgentReply(r.data);
@@ -2818,7 +2848,7 @@ function sparkleApp() {
             if (r.status === 401 || r.status === 403) { this.logoutAdmin(); this.showAdminAuthModal = true; this.adminAuthError = 'Your admin session expired. Sign in again.'; }
             return r;
         },
-        marketingTab: 'test_lab',
+        marketingTab: 'assistant',
 
         /* ---------- Lead CRM ---------- */
         leads: [],
@@ -2981,6 +3011,22 @@ function sparkleApp() {
             return { booking: by('booking'), request: by('request'), voucher: by('voucher'), question: by('question') + by('handoff') };
         },
 
+        /* ---------- Owner assistant (api/agent.js, owner mode) ---------- */
+        ownerChat: { messages: [], input: '', busy: false },
+        async askOwner(text) {
+            const q = String(text || this.ownerChat.input || '').trim();
+            if (!q || this.ownerChat.busy || this.adminMode !== 'live') return;
+            this.ownerChat.input = '';
+            const history = this.ownerChat.messages.filter(m => m.role !== 'sys').slice(-12).map(m => ({ role: m.role, text: m.text }));
+            this.ownerChat.messages.push({ role: 'user', text: q });
+            this.ownerChat.busy = true; this.scrollChat('ownerLog');
+            const r = await sbPost(this.cfg.chatWebhook, { mode: 'owner', message: q, history }, { 'X-Admin-Key': this.adminKey }, 60000);
+            this.ownerChat.busy = false;
+            if (r.status === 401) { this.logoutAdmin(); this.showAdminAuthModal = true; this.adminAuthError = 'Your admin session expired. Sign in again.'; return; }
+            this.ownerChat.messages.push(r.ok && r.data && r.data.reply ? { role: 'ai', text: r.data.reply } : { role: 'sys', text: 'Assistant unavailable (' + ((r.data && r.data.error) || r.error || r.status) + ').' });
+            this.scrollChat('ownerLog');
+        },
+
         /* ---------- Agent Test Lab ---------- */
         lab: {
             url: SB_CONFIG.chatWebhook,
@@ -3012,7 +3058,7 @@ function sparkleApp() {
             this.scrollChat('labLog');
             if (this.lab.engine === 'live') {
                 if (!this.lab.url) { this.lab.messages.push({ role: 'sys', text: 'No chat webhook URL — add one above or switch to the offline assistant.' }); return; }
-                const body = { sessionId: this.lab.sessionId, message: msg, testMode: true, context: this.chatContext(), timestamp: new Date().toISOString() };
+                const body = { sessionId: this.lab.sessionId, message: msg, history: this.lab.messages.slice(0, -1).filter(m => m.role !== 'sys').slice(-20).map(m => ({ role: m.role, text: m.text })), testMode: true, context: this.chatContext(), timestamp: new Date().toISOString() };
                 this.lab.lastRequest = body; this.lab.busy = true;
                 const r = await sbPost(this.lab.url, body, null, 60000);
                 this.lab.busy = false; this.lab.lastMs = r.ms;
